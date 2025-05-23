@@ -2,12 +2,14 @@
 
 ## Project Overview
 
-This is a full-stack application template with spatial data capabilities using:
-- React 19 (RC) with Vite 6 for the frontend
-- Express 5 (RC) for the backend API
+PetBnB is a pet-sitting marketplace application with spatial search capabilities using:
+- React 18 with Vite for the frontend
+- Express (JavaScript) for the backend API
 - PostgreSQL 15 with PostGIS 3.4 for spatial database
 - SQL-first approach (no ORM)
-- Leaflet for interactive maps
+- Mapbox GL JS for interactive maps
+- SWR for server state management
+- Plain CSS with BEM naming convention
 
 ## Common Commands
 
@@ -21,25 +23,29 @@ This is a full-stack application template with spatial data capabilities using:
 ### Database
 - `npm run migrate` - Run database migrations (requires DATABASE_URL)
 - `npm run seed` - Seed the database with sample data
+- `npm run generate-images` - Generate Studio Ghibli profile images using OpenAI
+- `npm run seed:full` - Generate images and seed database
 
 ### Building
 - `npm run build` - Build both client and server
 - `npm run build:client` - Build client only
-- `npm run build:server` - Build server only
+- `npm run build:server` - Build server only (Note: Backend is JavaScript, no build needed)
 
 ### Testing
 - `npm run test` - Run all tests
 - `npm run test:unit` - Run unit tests with Vitest
-- `npm run test:api` - Run API tests with Jest
+- `npm run test:api` - Run API tests with Vitest
 - `npm run test:e2e` - Run E2E tests with Playwright
 
 ## Important Files and Directories
 
 - `/migrations/` - SQL migration files
-- `/scripts/seed.ts` - Database seeding script
-- `/src/server/db.ts` - PostgreSQL connection pool
-- `/src/server/controllers/` - Express route controllers
+- `/scripts/seed.js` - Database seeding script
+- `/scripts/generate-images.js` - Studio Ghibli image generation script
+- `/src/server/db.js` - PostgreSQL connection pool
+- `/src/server/simplified-server.js` - Main Express server file
 - `/src/client/components/` - React components
+- `/public/images/profiles/` - Generated profile images
 
 ## PostGIS Usage Patterns
 
@@ -74,21 +80,23 @@ When working with spatial data:
 
 ## Code Style Guidelines
 
-- Use ES modules (import/export), not CommonJS (require)
+- Backend uses CommonJS (require/module.exports) as it's JavaScript
+- Frontend uses ES modules (import/export)
 - Use async/await for asynchronous operations
-- Use TypeScript interfaces/types for type definitions
+- Frontend uses TypeScript, backend uses JavaScript
 - Use Zod for input validation
 - Prefer raw SQL with parameterized queries over query builders
 - React components should be functional with hooks
+- CSS uses BEM naming convention, no Tailwind
 
 ## Project Structure Notes
 
-- Frontend and backend are in the same monorepo
-- `/src/client/` contains all frontend code
-- `/src/server/` contains all backend code
+- Frontend and backend are in the same repository
+- `/src/client/` contains all frontend code (TypeScript/React)
+- `/src/server/` contains all backend code (JavaScript/Express)
 - Vite handles frontend bundling
-- TypeScript is compiled for the backend
-- Tests are separated by frontend/backend
+- Backend runs directly with Node.js (no compilation)
+- Tests use Vitest for both frontend and backend
 
 ## Docker Tips
 
@@ -99,6 +107,31 @@ When working with spatial data:
 ## Common Pitfalls
 
 - Remember to cast geometry to geography for distance calculations in meters
-- The Leaflet marker icons need the special fix in the implementation plan
+- Mapbox requires MAPBOX_TOKEN environment variable to be set
+- OpenAI image generation requires OPENAI_API_KEY environment variable
 - Ensure proper CORS setup when testing the frontend against backend
 - Make sure environment variables are properly set in .env file
+- Backend uses JavaScript, not TypeScript - no type annotations
+
+## Environment Variables
+
+Required environment variables:
+```env
+# Database
+DATABASE_URL="postgresql://username:password@localhost:5432/petbnb"
+
+# Mapbox for maps and geocoding
+MAPBOX_TOKEN="your-mapbox-token"
+
+# OpenAI for Studio Ghibli image generation
+OPENAI_API_KEY="your-openai-api-key"
+```
+
+## Phase 1 Focus
+
+Phase 1 is logged-out functionality only:
+- No authentication system
+- Public sitter profiles
+- Search and discovery features
+- Studio Ghibli-style generated profile images
+- Placeholder data for ratings and response times
