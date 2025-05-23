@@ -1,0 +1,426 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+h1 {
+  font-size: 2.5em;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+
+/* App Header Styling */
+.app-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.app-header h1 {
+  background: linear-gradient(135deg, #2196F3, #00BCD4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  font-weight: 800;
+}
+
+.app-header p {
+  color: #666;
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 600px;
+  border-radius: 8px;
+}
+
+.restaurant-popup h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
+}
+
+.restaurant-popup p {
+  margin: 0.25rem 0;
+}
+
+/* Modern Restaurant Card Styling */
+.restaurant-card {
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  background-color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.restaurant-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.card-header {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+}
+
+.restaurant-image {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.5s ease;
+}
+
+.restaurant-card:hover .restaurant-image {
+  transform: scale(1.05);
+}
+
+.no-image {
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.5) 100%);
+}
+
+.restaurant-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: #fff;
+  color: #333;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 1;
+}
+
+.card-content {
+  padding: 1.25rem;
+}
+
+.restaurant-name {
+  margin: 0 0 0.5rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.restaurant-rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.star-rating {
+  display: flex;
+  margin-right: 8px;
+}
+
+.star {
+  color: #FFD700;
+  font-size: 1.2rem;
+  margin-right: 2px;
+}
+
+.half-star {
+  position: relative;
+  opacity: 0.5;
+}
+
+.rating-text {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.restaurant-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.tag {
+  background-color: #f0f7ff;
+  color: #0066cc;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.specialty-tag {
+  background-color: #fff0f7;
+  color: #cc0066;
+}
+
+.restaurant-details {
+  margin-top: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+.detail-icon {
+  margin-right: 8px;
+  font-size: 1rem;
+}
+
+.detail-text {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.restaurant-list {
+  margin-top: 2rem;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+
+.count-badge {
+  font-size: 1rem;
+  background-color: #f0f7ff;
+  color: #0066cc;
+  border-radius: 20px;
+  padding: 4px 12px;
+  margin-left: 12px;
+  font-weight: 500;
+}
+
+.restaurant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .restaurant-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Filter Bar Styling */
+.filter-bar {
+  background: linear-gradient(135deg, #2196F3, #00BCD4);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.filter-section {
+  flex: 1;
+  min-width: 200px;
+}
+
+.filter-section h3 {
+  color: white;
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-button {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.filter-button.active {
+  background-color: white;
+  color: #0288D1;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Map Controls Styling */
+.map-controls {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.control-button {
+  background-color: #f0f7ff;
+  border: none;
+  color: #0066cc;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.control-button:hover:not(:disabled) {
+  background-color: #e0f0ff;
+}
+
+.control-button.active {
+  background-color: #0066cc;
+  color: white;
+}
+
+.control-button:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+@media (prefers-color-scheme: dark) {
+  .restaurant-card {
+    background-color: #2a2a2a;
+  }
+  
+  .restaurant-name {
+    color: #fff;
+  }
+  
+  .rating-text {
+    color: #bbb;
+  }
+  
+  .tag {
+    background-color: #1a3a5a;
+    color: #89c4ff;
+  }
+  
+  .specialty-tag {
+    background-color: #3a1a2a;
+    color: #ff89c4;
+  }
+  
+  .detail-item {
+    color: #ccc;
+  }
+  
+  .no-image {
+    background-color: #333;
+    color: #666;
+  }
+  
+  .restaurant-badge {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  .section-title {
+    color: #fff;
+  }
+  
+  .count-badge {
+    background-color: #1a3a5a;
+    color: #89c4ff;
+  }
+  
+  /* Dark mode for new components */
+  .app-header {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .app-header p {
+    color: #aaa;
+  }
+  
+  .filter-bar {
+    background: linear-gradient(135deg, #0D47A1, #006064);
+  }
+  
+  .control-button {
+    background-color: #1a3a5a;
+    color: #89c4ff;
+  }
+  
+  .control-button:hover:not(:disabled) {
+    background-color: #2a4a6a;
+  }
+  
+  .control-button.active {
+    background-color: #4a7aba;
+    color: white;
+  }
+}
