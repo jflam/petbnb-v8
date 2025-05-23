@@ -12,17 +12,16 @@ Phase 1 establishes the core foundation for PetBnB with basic sitter discovery f
 Following the provided technical stack template:
 
 **Frontend:**
-- React 19 (RC) with Vite 6 for development
+- React 18 with Vite for development
 - TypeScript for type safety
-- Zustand for client state management
-- React Query for server state
-- Tailwind CSS for styling
-- React Hook Form + Zod for form validation
-- React Router v6 for navigation
+- SWR for server state management
+- Plain CSS for styling
+- Zod for validation
+- Single-page app (no routing needed for Phase 1)
 
 **Backend:**
-- Express 5 (RC) 
-- TypeScript throughout
+- Express (current version in codebase)
+- JavaScript (no TypeScript compilation)
 - PostgreSQL 15 with PostGIS 3.4 (SQL-first, no ORM)
 - node-postgres (pg) for database connections
 - Zod for API validation
@@ -111,7 +110,7 @@ REDIS_URL="redis://localhost:6379"
 # JWT_EXPIRES_IN="24h"
 
 # Mapbox (for geocoding and mapping)
-MAPBOX_ACCESS_TOKEN="your-mapbox-access-token"
+MAPBOX_TOKEN="your-mapbox-token"
 MAPBOX_STYLE_URL="mapbox://styles/mapbox/streets-v11"
 
 # File Upload
@@ -1316,3 +1315,78 @@ All 10 outstanding issues have been resolved through the following decisions:
 10. ✅ **Payments deferred** to Phase 3
 
 The implementation plan and PRD are now fully aligned with clear phase boundaries and technology choices.
+
+---
+
+## Codebase vs Implementation Plan Differences
+
+After examining the current codebase, the following differences were identified between what the implementation plan assumes and what actually exists:
+
+### 1. **Application Domain Mismatch** ✅ RESOLVED
+- **Plan**: PetBnB application for pet sitters and owners
+- **Codebase**: Restaurant discovery application with spatial features
+- **Resolution**: Replace entire restaurant domain with PetBnB domain model
+
+### 2. **Frontend Technology Stack** ✅ RESOLVED
+- **Plan**: React 19 (RC), Zustand, React Hook Form, Tailwind CSS, React Router
+- **Codebase**: React 18, SWR for data fetching, plain CSS, no routing (SPA)
+- **Resolution**: Keep the simpler existing stack (React 18, SWR, plain CSS)
+
+### 3. **Backend Architecture** ✅ RESOLVED
+- **Plan**: Express 5 with TypeScript
+- **Codebase**: Express with plain JavaScript (`simplified-server.js`)
+- **Resolution**: Keep JavaScript for backend (simpler, no compilation needed)
+
+### 4. **Database Schema** ✅ RESOLVED
+- **Plan**: Complex sitter profiles with user authentication
+- **Codebase**: Simple restaurants table with PostGIS location
+- **Resolution**: Drop existing schema and recreate with PetBnB sitter_profiles table
+
+### 5. **API Endpoints** ✅ RESOLVED
+- **Plan**: `/auth/*`, `/sitters/*`, `/search/*` endpoints
+- **Codebase**: `/api/restaurants` and `/api/restaurants/nearby` only
+- **Resolution**: Create new endpoint files for PetBnB API (keep restaurant code as reference)
+
+### 6. **State Management** ✅ RESOLVED
+- **Plan**: Zustand for global state
+- **Codebase**: SWR for server state only
+- **Resolution**: Use SWR for now, add global state solution later if needed
+
+### 7. **Testing Setup** ✅ RESOLVED
+- **Plan**: Separate Jest for API tests
+- **Codebase**: Unified Vitest for all tests
+- **Resolution**: Keep Vitest for all tests (simpler unified setup)
+
+### 8. **Build Configuration** ✅ RESOLVED
+- **Plan**: TypeScript compilation for backend
+- **Codebase**: Direct JavaScript execution
+- **Resolution**: Keep direct JavaScript execution (no build step needed)
+
+### 9. **Environment Variables** ✅ RESOLVED
+- **Plan**: `MAPBOX_ACCESS_TOKEN`
+- **Codebase**: `MAPBOX_TOKEN`
+- **Resolution**: Keep existing MAPBOX_TOKEN variable name
+
+### 10. **Missing Features in Codebase** ✅ RESOLVED
+- No authentication system - **Resolution**: Not needed for Phase 1 (logged-out only)
+- No file upload capability - **Resolution**: Use placeholder images for sitter profiles
+- No form validation beyond Zod schemas - **Resolution**: Zod is sufficient for Phase 1
+- No monorepo structure - **Resolution**: Keep simple structure, no workspaces needed
+- No Redis service - **Resolution**: Not needed for Phase 1 (no sessions/caching)
+
+### Summary of Technology Decisions
+
+All 10 codebase differences have been resolved with the following decisions:
+
+1. ✅ **Replace restaurant domain** entirely with PetBnB
+2. ✅ **Keep simpler frontend stack** (React 18, SWR, plain CSS)
+3. ✅ **Keep JavaScript backend** (no TypeScript compilation)
+4. ✅ **Drop and recreate database** with PetBnB schema
+5. ✅ **Create new API endpoints** alongside existing code
+6. ✅ **Use SWR only** for now, add global state if needed
+7. ✅ **Keep Vitest** for all testing
+8. ✅ **No build step** for backend JavaScript
+9. ✅ **Keep MAPBOX_TOKEN** variable name
+10. ✅ **Use placeholders** instead of file uploads, skip Redis/auth for Phase 1
+
+The simplified technology choices from the existing codebase are well-suited for a Phase 1 MVP. The core PostGIS spatial functionality can be directly reused for the sitter location features.
