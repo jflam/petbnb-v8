@@ -46,7 +46,7 @@ CREATE TABLE sitter_profiles (
   last_name VARCHAR(255) NOT NULL,
   email VARCHAR(255) UNIQUE NOT NULL,
   phone VARCHAR(20),
-  profile_picture VARCHAR(500),
+  profile_picture VARCHAR(500), -- Path to generated Studio Ghibli image
   
   bio TEXT,
   experience TEXT,
@@ -113,9 +113,12 @@ REDIS_URL="redis://localhost:6379"
 MAPBOX_TOKEN="your-mapbox-token"
 MAPBOX_STYLE_URL="mapbox://styles/mapbox/streets-v11"
 
-# File Upload
-UPLOAD_DIR="./uploads"
-MAX_FILE_SIZE=5242880  # 5MB
+# Image Generation
+OPENAI_API_KEY="your-openai-api-key"  # For Studio Ghibli style profile images
+
+# File paths
+PUBLIC_DIR="./public"
+IMAGES_DIR="./public/images/profiles"
 ```
 
 ---
@@ -627,13 +630,16 @@ The seed data has been organized into separate artifacts for better maintainabil
 - **Sitter Seed Data**: Contains 20 detailed sitter profiles (10 Seattle, 10 Austin) with realistic bios, experience, pricing, and location data
 - **Owner Seed Data**: Contains 10 pet owner profiles with associated pet information for testing search scenarios
 - **Seed Script**: Main seeding script that imports data and populates the database
+- **Image Generation Prompts**: Each sitter and owner includes a Studio Ghibli-style image prompt based on their characteristics
 
 ### Package.json Script
 
 ```json
 {
   "scripts": {
-    "db:seed": "node scripts/seed.js"
+    "db:seed": "node scripts/seed.js",
+    "generate-images": "node scripts/generate-images.js",
+    "seed:full": "npm run generate-images && npm run db:seed"
   }
 }
 ```
@@ -672,6 +678,184 @@ The seed data has been organized into separate artifacts for better maintainabil
 - Email addresses follow pattern: `firstname.lastname@email.com`
 - Can be used for testing authentication and user flows
 
+### Studio Ghibli-Style Image Generation
+
+**Uses OpenAI's gpt-image-1 model to generate unique profile images for each sitter and pet owner**
+
+**Image Generation Script:** `scripts/generate-images.js`
+
+```javascript
+const fs = require('fs').promises;
+const path = require('path');
+const fetch = require('node-fetch');
+
+// Load seed data with image prompts
+const sitterData = require('./seed-data/sitters.json');
+const ownerData = require('./seed-data/owners.json');
+
+async function generateImage(prompt, filename) {
+  try {
+    const response = await fetch('https://api.openai.com/v1/images/generations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-image-1",
+        prompt: `Studio Ghibli style illustration: ${prompt}. Soft watercolor aesthetic, gentle lighting, whimsical and heartwarming atmosphere, detailed background, character portrait.`,
+        size: "1024x1024",
+        quality: "standard",
+        n: 1
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const imageUrl = data.data[0].url;
+    
+    // Download and save the image
+    const imageResponse = await fetch(imageUrl);
+    const buffer = await imageResponse.buffer();
+    
+    const outputPath = path.join(__dirname, '../public/images/profiles', filename);
+    await fs.mkdir(path.dirname(outputPath), { recursive: true });
+    await fs.writeFile(outputPath, buffer);
+    
+    console.log(`Generated image: ${filename}`);
+    return `/images/profiles/${filename}`;
+  } catch (error) {
+    console.error(`Failed to generate image for ${filename}:`, error.message);
+    return null;
+  }
+}
+
+async function generateAllImages() {
+  // Generate sitter images
+  for (const sitter of sitterData) {
+    const filename = `sitter-${sitter.id}.jpg`;
+    const imageUrl = await generateImage(sitter.imagePrompt, filename);
+    sitter.profilePicture = imageUrl || '/images/placeholder-sitter.jpg';
+  }
+
+  // Generate owner images
+  for (const owner of ownerData) {
+    const filename = `owner-${owner.id}.jpg`;
+    const imageUrl = await generateImage(owner.imagePrompt, filename);
+    owner.profilePicture = imageUrl || '/images/placeholder-owner.jpg';
+  }
+
+  // Save updated data with image URLs
+  await fs.writeFile(
+    path.join(__dirname, './seed-data/sitters-with-images.json'),
+    JSON.stringify(sitterData, null, 2)
+  );
+  
+  await fs.writeFile(
+    path.join(__dirname, './seed-data/owners-with-images.json'),
+    JSON.stringify(ownerData, null, 2)
+  );
+}
+
+generateAllImages().catch(console.error);
+```
+
+**Example Seed Data with Image Prompts:**
+
+```javascript
+// sitters.json excerpt
+{
+  "id": "sarah-johnson-seattle",
+  "firstName": "Sarah",
+  "lastName": "Johnson",
+  "bio": "Dog trainer and hiking enthusiast...",
+  "imagePrompt": "A cheerful woman in her early 30s with auburn hair in a ponytail, wearing outdoor gear, surrounded by happy dogs in a lush Pacific Northwest forest setting with tall evergreen trees and morning mist",
+  "city": "Seattle",
+  ...
+}
+
+// owners.json excerpt  
+{
+  "id": "emily-chen-seattle",
+  "firstName": "Emily",
+  "lastName": "Chen",
+  "pets": ["Luna (Husky)"],
+  "imagePrompt": "A young Asian woman with long black hair wearing cozy sweater, sitting in a modern apartment with large windows showing Seattle skyline, petting a beautiful blue-eyed Husky",
+  ...
+}
+```
+
+**Image Service Implementation:**
+
+```javascript
+// src/server/routes/images.js
+
+// Get sitter profile image
+app.get('/api/sitters/:id/image', async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    const result = await db.query(
+      'SELECT profile_picture FROM sitter_profiles WHERE id = $1',
+      [id]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Sitter not found' });
+    }
+    
+    const imagePath = result.rows[0].profile_picture || '/images/placeholder-sitter.jpg';
+    res.json({ imageUrl: imagePath });
+  } catch (error) {
+    console.error('Error fetching sitter image:', error);
+    res.status(500).json({ error: 'Failed to fetch image' });
+  }
+});
+
+// Get owner profile image
+app.get('/api/owners/:id/image', async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    // Note: In Phase 1, owner data comes from seed data only
+    // In later phases, this would query an owners table
+    const ownerData = require('../scripts/seed-data/owners-with-images.json');
+    const owner = ownerData.find(o => o.id === id);
+    
+    if (!owner) {
+      return res.status(404).json({ error: 'Owner not found' });
+    }
+    
+    const imagePath = owner.profilePicture || '/images/placeholder-owner.jpg';
+    res.json({ imageUrl: imagePath });
+  } catch (error) {
+    console.error('Error fetching owner image:', error);
+    res.status(500).json({ error: 'Failed to fetch image' });
+  }
+});
+
+// Serve static images
+app.use('/images', express.static(path.join(__dirname, '../../public/images')));
+```
+
+**Environment Variables:**
+```env
+# OpenAI API for image generation
+OPENAI_API_KEY="your-openai-api-key"
+```
+
+**Running the Image Generation:**
+```bash
+# Generate all profile images
+npm run generate-images
+
+# This will create images in public/images/profiles/
+# Each image is named by user ID for easy mapping
+```
+
 ------
 
 ## API Documentation (Phase 1 - No Authentication)
@@ -681,6 +865,13 @@ The seed data has been organized into separate artifacts for better maintainabil
 POST /sitters                 # Create new sitter profile (public)
 GET /sitters/:id              # Get sitter profile by ID
 PUT /sitters/:id              # Update sitter profile (public for demo)
+GET /sitters/:id/image        # Get sitter's Studio Ghibli profile image
+```
+
+### Owner Profile Endpoints (Phase 1 - Read-only for demo)
+```typescript
+GET /owners/:id               # Get owner profile by ID
+GET /owners/:id/image         # Get owner's Studio Ghibli profile image
 ```
 
 ### Search Endpoints
@@ -691,7 +882,9 @@ GET /search/locations         # Mapbox Places autocomplete proxy
 
 ### Static Assets
 ```typescript
-GET /images/placeholder.jpg   # Placeholder profile images
+GET /images/placeholder-sitter.jpg   # Fallback sitter image
+GET /images/placeholder-owner.jpg    # Fallback owner image
+GET /images/profiles/*               # Generated Studio Ghibli images
 ```
 
 ---

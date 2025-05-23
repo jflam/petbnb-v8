@@ -50,7 +50,7 @@ Pet owners must evaluate sitter options instantly—without account friction—w
 
 #### Sitter User Stories
 
-- **S‑US‑01** As a *new sitter*, I can create a profile with photos, bio, and experience so that owners can learn about me.
+- **S‑US‑01** As a *new sitter*, I can create a profile with a Studio Ghibli-style avatar, bio, and experience so that owners can learn about me.
 - **S‑US‑02** As a *sitter*, I can set my service offerings and base prices so that owners know what I provide.
 - **S‑US‑03** As a *sitter*, I can define my service area radius so that I only receive relevant requests.
 - **S‑US‑04** As a *sitter*, I can specify which pet types, sizes, and special needs I accept so that I get compatible bookings.
@@ -75,6 +75,7 @@ Pet owners must evaluate sitter options instantly—without account friction—w
    - **Service Types** multi‑select (Boarding, House Sitting, Drop‑in Visits, Day Care, Dog Walking)
    - **Price Range** slider ($0 - $200/night)
 3. **Listing Card Enhancements**
+   - **Studio Ghibli-style profile image** – AI-generated unique avatar for each sitter (Phase 1: generated from profile data)
    - ★ Rating displayed with tooltip showing review count.
    - **Response Time** badge (derived from median of last 30 enquiries; new sitters show "New Sitter" badge instead).
    - **Repeat‑client %** indicator (calculated from last 12 months; minimum 5 bookings to display).
@@ -122,7 +123,7 @@ Pet owners must evaluate sitter options instantly—without account friction—w
   - Pins are **numbered** to match their card order in the list view (when visible in split‑screen mode).  
   - Marker clustering activates when > 50 sitters share the viewport; cluster bubbles display count and "explode" on zoom.
 - **Heat‑Map Shading** – When the total sitter count in the current viewport exceeds **200**, render a translucent red‑to‑yellow density overlay beneath the pins.  Heat disappears when zoomed in beyond level 13 to avoid visual clutter.
-- **Pin Metadata** – Overlays display nightly price, ★ rating, **repeat‑client %**, and Star‑Sitter badge (earned at 4.8+ rating with 50+ reviews). Hover reveals a mini‑profile tooltip (photo, name, distance, *View Profile*).
+- **Pin Metadata** – Overlays display nightly price, ★ rating, **repeat‑client %**, and Star‑Sitter badge (earned at 4.8+ rating with 50+ reviews). Hover reveals a mini‑profile tooltip (Studio Ghibli avatar, name, distance, *View Profile*).
 - **Privacy‑First Geocoding** – Apply ±400 ft random offset before rendering pins, constrained to valid land areas using reverse geocoding validation; the true address is shown only after a booking is confirmed, improving on Rover's exact pins. [2]
 - **Service Radius Overlay (Optional)** – Toggle a dashed circle showing each sitter's travel radius; compensates for Rover's fixed ~1‑mile halo. [3]
 - **Filter Coupling** – Active filters (pet size, special needs, price, etc.) limit visible pins; filtered‑out sitters fade to 30 % opacity and are non‑interactive.
@@ -185,6 +186,28 @@ Scenario: Privacy offset on pins
 
 *To be specified in next iteration.*
 
+### 14  Visual Design & Branding
+
+#### Studio Ghibli-Inspired Aesthetic
+
+**Profile Images**
+- **AI-Generated Avatars** – Each sitter and pet owner receives a unique Studio Ghibli-style portrait generated using OpenAI's gpt-image-1 model
+- **Consistent Art Style** – Soft watercolor aesthetic with gentle lighting and whimsical atmosphere
+- **Personalized Generation** – Images generated based on user characteristics, location, and pet preferences
+- **Fallback Options** – Default placeholder images available if generation fails
+
+**Implementation Details**
+- Images generated during seed data creation for demo profiles
+- Phase 1: Pre-generated images mapped by user ID
+- Phase 2: Real-time generation during profile creation
+- Phase 3: User option to regenerate or upload custom image
+
+**Technical Approach**
+- OpenAI gpt-image-1 API for image generation
+- 1024x1024 resolution for high-quality display
+- Images stored in public/images/profiles/ directory
+- API endpoints to retrieve images by user ID
+
 ### 15  Competitive Differentiation
 
 #### Key Differentiators vs Rover
@@ -214,6 +237,12 @@ Scenario: Privacy offset on pins
    - Local sitter meetups/training events
    - Sitter referral bonuses
    - Pet owner loyalty rewards (every 10th booking discounted)
+
+6. **Unique Visual Identity**
+   - Studio Ghibli-inspired profile images create emotional connection
+   - Distinctive aesthetic differentiates from competitor's generic photos
+   - AI-generated avatars ensure privacy while maintaining personality
+   - Whimsical, approachable brand appeals to pet lovers
 
 
 
