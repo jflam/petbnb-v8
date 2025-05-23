@@ -28,7 +28,7 @@ Following the provided technical stack template:
 
 **Infrastructure:**
 - Docker for containerization
-- pnpm workspaces for monorepo management
+- npm for package management (no workspaces)
 - GitHub Actions for CI/CD
 - Azure deployment ready
 
@@ -127,9 +127,9 @@ MAX_FILE_SIZE=5242880  # 5MB
 **Objective:** Set up the complete development environment with proper tooling and structure.
 
 **Requirements:**
-- Initialize monorepo with pnpm workspaces
-- Create frontend React 19 app with Vite 6
-- Create backend Express 5 app with TypeScript
+- Initialize project with npm
+- Use existing React 18 app with Vite
+- Use existing Express app with JavaScript
 - Configure ESLint, Prettier, and Husky pre-commit hooks
 - Set up Docker Compose for local development (PostgreSQL 15 + PostGIS 3.4)
 - Configure GitHub Actions workflow for CI/CD
@@ -167,55 +167,7 @@ petbnb/
 - No authentication or protected routes
 - Focus on search and display functionality
 
-**Simplified Sitter Model:**
-```prisma
-model SitterProfile {
-  id          String   @id @default(cuid())
-  
-  // Basic info (no user association in Phase 1)
-  firstName   String
-  lastName    String
-  email       String   @unique
-  phone       String?
-  profilePicture String?
-  
-  bio         String?
-  experience  String?
-  serviceRadius Int     @default(10) // miles
-  hourlyRate  Decimal  @db.Decimal(10,2)
-  
-  // Mock data fields for Phase 1 visual appeal
-  mockRating    Decimal  @default(4.5) @db.Decimal(2,1)
-  mockReviewCount Int    @default(12)
-  mockResponseTime String @default("1 hour")
-  mockRepeatClientPercent Int @default(85)
-  
-  // Location with PostGIS
-  address     String
-  city        String
-  state       String
-  zipCode     String
-  latitude    Decimal  @db.Decimal(10,8)
-  longitude   Decimal  @db.Decimal(11,8)
-  location    Unsupported("geometry(Point, 4326)")?
-  
-  // Services
-  acceptsDogs     Boolean @default(true)
-  acceptsCats     Boolean @default(true)
-  acceptsOtherPets Boolean @default(false)
-  
-  // Home features
-  hasFencedYard   Boolean @default(false)
-  hasOtherPets    Boolean @default(false)
-  isSmokeFree     Boolean @default(true)
-  
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  @@map("sitter_profiles")
-}
-```
+**Note:** The sitter model is defined in SQL in the Core Database Schema section above. We're using a SQL-first approach without an ORM.
 
 **Validation Criteria:**
 - Sitter profiles can be created without authentication
@@ -247,12 +199,12 @@ Grid: { cols: number, gap?: 'sm' | 'md' | 'lg', children: ReactNode }
 ```
 
 **Design System:**
-- Tailwind CSS utility classes
+- Plain CSS with BEM naming convention
 - Color palette: Primary blue (#2563eb), Secondary gray (#6b7280), Success green (#059669), Error red (#dc2626)
-- Typography scale: text-sm, text-base, text-lg, text-xl, text-2xl
-- Spacing scale: 0.5rem increments (p-2, p-4, p-6, p-8)
-- Border radius: rounded-md (6px) for most components
-- Shadow levels: shadow-sm, shadow-md, shadow-lg
+- Typography scale: .text-sm (0.875rem), .text-base (1rem), .text-lg (1.125rem), .text-xl (1.25rem), .text-2xl (1.5rem)
+- Spacing scale: CSS variables --spacing-2 (0.5rem), --spacing-4 (1rem), --spacing-6 (1.5rem), --spacing-8 (2rem)
+- Border radius: --radius-md (6px) for most components
+- Shadow levels: .shadow-sm, .shadow-md, .shadow-lg using box-shadow
 
 **Validation Criteria:**
 - All components render without errors
@@ -304,7 +256,7 @@ Grid: { cols: number, gap?: 'sm' | 'md' | 'lg', children: ReactNode }
 // Mapbox geocoding service
 import mapboxgl from 'mapbox-gl';
 
-const mapboxClient = mapboxgl.accessToken = process.env.MAPBOX_ACCESS_TOKEN;
+const mapboxClient = mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
 
 export class MapboxGeocodingService {
   async searchPlaces(query: string, options?: {
@@ -314,7 +266,7 @@ export class MapboxGeocodingService {
   }): Promise<MapboxFeature[]> {
     const params = new URLSearchParams({
       q: query,
-      access_token: process.env.MAPBOX_ACCESS_TOKEN!,
+      access_token: process.env.MAPBOX_TOKEN!,
       country: options?.country || 'us',
       types: options?.types?.join(',') || 'place,locality,neighborhood',
       limit: '5'
@@ -338,7 +290,7 @@ export class MapboxGeocodingService {
 
   async reverseGeocode(longitude: number, latitude: number): Promise<MapboxFeature | null> {
     const response = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${process.env.MAPBOX_ACCESS_TOKEN}`
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${process.env.MAPBOX_TOKEN}`
     );
 
     if (!response.ok) {
@@ -398,9 +350,9 @@ Step 4: Home Features
 - Additional amenities
 
 Step 5: Profile Photo
-- Image upload with preview
-- File validation (max 5MB, image types only)
-- Automatic resizing to standard dimensions
+- Select from placeholder image options
+- Preview selected placeholder
+- Option to use custom URL (for demo purposes)
 ```
 
 **Technical Requirements:**
@@ -409,7 +361,7 @@ Step 5: Profile Photo
 - Back/Next navigation with validation
 - Final step saves complete profile to database
 - Address geocoding using Mapbox Geocoding API
-- Image upload with local file storage (Phase 1)
+- Placeholder image selection (no file upload in Phase 1)
 
 **Mapbox Integration for Address Input:**
 ```typescript
@@ -461,7 +413,7 @@ export class AddressGeocodingService {
 **Validation Criteria:**
 - Complete onboarding flow works end-to-end
 - Profile data saves correctly to database
-- Image upload processes successfully
+- Placeholder image selection works correctly
 - Address geocoding returns valid coordinates using Mapbox
 - Form handles errors gracefully
 
@@ -535,15 +487,14 @@ Response:
 
 **Backend Implementation with Mapbox:**
 ```typescript
-// Search service with Mapbox geocoding
-@Injectable()
-export class SearchService {
-  constructor(
-    private prisma: PrismaService,
-    private mapboxService: MapboxGeocodingService
-  ) {}
+// Search service with Mapbox geocoding (JavaScript/Express)
+class SearchService {
+  constructor(db, mapboxService) {
+    this.db = db;
+    this.mapboxService = mapboxService;
+  }
 
-  async findSitters(query: SearchSittersDto) {
+  async findSitters(query) {
     // Geocode the search location using Mapbox
     const features = await this.mapboxService.searchPlaces(query.location, {
       country: 'us',
@@ -551,39 +502,38 @@ export class SearchService {
     });
 
     if (features.length === 0) {
-      throw new BadRequestException('Location not found');
+      throw new Error('Location not found');
     }
 
     const searchFeature = features[0];
     const [searchLng, searchLat] = searchFeature.center;
     
     // Find sitters within radius using PostGIS spatial functions
-    const sitters = await this.prisma.$queryRaw`
-      SELECT sp.*, u.firstName, u.lastName, u.profilePicture,
+    const result = await this.db.query(`
+      SELECT sp.*,
         ST_Distance(
           sp.location::geography,
-          ST_SetSRID(ST_MakePoint(${searchLng}, ${searchLat}), 4326)::geography
+          ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography
         ) / 1000 AS distance_km
       FROM sitter_profiles sp
-      JOIN users u ON sp.userId = u.id
-      WHERE sp.isActive = true
+      WHERE sp.is_active = true
       AND (
-        (${query.petType} = 'dog' AND sp.acceptsDogs = true) OR
-        (${query.petType} = 'cat' AND sp.acceptsCats = true) OR
-        (${query.petType} = 'other' AND sp.acceptsOtherPets = true)
+        ($3 = 'dog' AND sp.accepts_dogs = true) OR
+        ($3 = 'cat' AND sp.accepts_cats = true) OR
+        ($3 = 'other' AND sp.accepts_other_pets = true)
       )
       AND ST_DWithin(
         sp.location::geography,
-        ST_SetSRID(ST_MakePoint(${searchLng}, ${searchLat}), 4326)::geography,
-        ${query.radius} * 1609.34  -- Convert miles to meters
+        ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography,
+        $4 * 1609.34  -- Convert miles to meters
       )
       ORDER BY distance_km ASC
       LIMIT 50
-    `;
+    `, [searchLng, searchLat, query.petType, query.radius || 10]);
 
     return {
-      sitters,
-      total: sitters.length,
+      sitters: result.rows,
+      total: result.rows.length,
       searchLocation: {
         latitude: searchLat,
         longitude: searchLng,
@@ -655,49 +605,6 @@ export class SearchService {
 - Mobile experience is fully functional
 - Navigation works seamlessly
 
-### 8. File Upload System
-
-**Objective:** Secure file upload for profile pictures with proper validation.
-
-**Backend Upload Service:**
-```typescript
-// Upload endpoint
-POST /upload/profile-picture
-- Multipart form data with image file
-- User authentication required
-- File validation (type, size, dimensions)
-- Local file storage with organized directory structure
-- Return public URL for saved image
-
-// File validation rules
-- Allowed types: JPEG, PNG, WebP
-- Maximum size: 5MB
-- Automatic resizing to standard dimensions (400x400)
-- Unique filename generation to prevent conflicts
-```
-
-**Frontend Upload Component:**
-- Drag and drop file selection
-- Click to browse file picker
-- Image preview before upload
-- Upload progress indicator
-- Error handling for failed uploads
-- Integration with profile creation form
-
-**Security Considerations:**
-- File type validation on both client and server
-- Virus scanning (basic implementation)
-- Prevent script file uploads
-- Rate limiting on upload endpoints
-- Proper CORS configuration
-
-**Validation Criteria:**
-- Images upload successfully and display correctly
-- File validation prevents malicious uploads
-- Upload progress provides user feedback
-- Error messages are clear and helpful
-- Uploaded images are properly sized and optimized
-
 ---
 
 ## Seed Data Generation
@@ -726,7 +633,7 @@ The seed data has been organized into separate artifacts for better maintainabil
 ```json
 {
   "scripts": {
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "node scripts/seed.js"
   }
 }
 ```
@@ -767,41 +674,24 @@ The seed data has been organized into separate artifacts for better maintainabil
 
 ------
 
-## API Documentation
-
-### Authentication Endpoints
-```typescript
-POST /auth/register
-POST /auth/login
-GET /auth/profile (Protected)
-POST /auth/logout (Protected)
-```
-
-### User Management Endpoints
-```typescript
-GET /users/profile (Protected)
-PUT /users/profile (Protected)
-POST /users/become-sitter (Protected)
-```
+## API Documentation (Phase 1 - No Authentication)
 
 ### Sitter Profile Endpoints
 ```typescript
-POST /sitters/profile (Protected, Sitter role)
-GET /sitters/:id
-PUT /sitters/profile (Protected, Sitter role)
-GET /sitters/dashboard (Protected, Sitter role)
+POST /sitters                 # Create new sitter profile (public)
+GET /sitters/:id              # Get sitter profile by ID
+PUT /sitters/:id              # Update sitter profile (public for demo)
 ```
 
 ### Search Endpoints
 ```typescript
-GET /search/sitters
-GET /search/locations (Google Places proxy)
+GET /search/sitters           # Search for sitters by location
+GET /search/locations         # Mapbox Places autocomplete proxy
 ```
 
-### Upload Endpoints
+### Static Assets
 ```typescript
-POST /upload/profile-picture (Protected)
-GET /uploads/:filename (Public static files)
+GET /images/placeholder.jpg   # Placeholder profile images
 ```
 
 ---
@@ -812,39 +702,43 @@ GET /uploads/:filename (Public static files)
 All tests must validate the actual implementation without mocking core business logic. Tests should use real database connections, actual API calls, and genuine user interactions to ensure the system works as intended in production.
 
 ### Test Database Setup
-```typescript
-// test/setup/database.ts
-import { PrismaClient } from '@prisma/client';
-import { execSync } from 'child_process';
+```javascript
+// test/setup/database.js
+const { Pool } = require('pg');
+const { execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
 
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_TEST_URL || 'postgresql://test:test@localhost:5433/petbnb_test'
-    }
-  }
+const pool = new Pool({
+  connectionString: process.env.DATABASE_TEST_URL || 'postgresql://test:test@localhost:5433/petbnb_test'
 });
 
-export async function setupTestDatabase() {
+async function setupTestDatabase() {
   // Reset test database to clean state
-  await prisma.$executeRaw`DROP SCHEMA IF EXISTS public CASCADE`;
-  await prisma.$executeRaw`CREATE SCHEMA public`;
+  await pool.query('DROP SCHEMA IF EXISTS public CASCADE');
+  await pool.query('CREATE SCHEMA public');
   
-  // Run migrations
-  execSync('npx prisma migrate deploy', { 
-    env: { ...process.env, DATABASE_URL: process.env.DATABASE_TEST_URL }
-  });
+  // Enable PostGIS
+  await pool.query('CREATE EXTENSION IF NOT EXISTS postgis');
+  
+  // Run SQL migrations
+  const migrationsDir = path.join(__dirname, '../../migrations');
+  const migrations = fs.readdirSync(migrationsDir).sort();
+  
+  for (const migration of migrations) {
+    const sql = fs.readFileSync(path.join(migrationsDir, migration), 'utf8');
+    await pool.query(sql);
+  }
   
   // Seed with minimal test data
   await seedTestData();
 }
 
-export async function cleanupTestDatabase() {
-  await prisma.sitterProfile.deleteMany();
-  await prisma.user.deleteMany();
+async function cleanupTestDatabase() {
+  await pool.query('DELETE FROM sitter_profiles');
 }
 
-export { prisma as testDb };
+module.exports = { pool as testDb, setupTestDatabase, cleanupTestDatabase };
 ```
 
 ### Unit Tests (No Mocking of Business Logic)
@@ -856,7 +750,7 @@ export { prisma as testDb };
 - Real test database with User table
 - bcrypt for actual password hashing
 - JWT library for token generation
-- Real Prisma client (no mocking)
+- Real PostgreSQL client with node-postgres (no mocking)
 
 **Test Implementation:**
 ```typescript
@@ -867,7 +761,7 @@ describe('AuthService Integration Tests', () => {
   beforeEach(async () => {
     await setupTestDatabase();
     // Use real services with test database
-    authService = new AuthService(testDb, new JwtService({}));
+    authService = new AuthService(testDb);
     userService = new UserService(testDb);
   });
 
@@ -888,9 +782,11 @@ describe('AuthService Integration Tests', () => {
       const result = await authService.register(userData);
 
       // Verify user exists in database
-      const dbUser = await testDb.user.findUnique({ 
-        where: { email: userData.email } 
-      });
+      const result = await testDb.query(
+        'SELECT * FROM users WHERE email = $1',
+        [userData.email]
+      );
+      const dbUser = result.rows[0];
       
       expect(dbUser).toBeDefined();
       expect(dbUser.email).toBe(userData.email);
@@ -1086,14 +982,13 @@ const execAsync = promisify(exec);
 
 export default async function globalSetup() {
   // Start test database container
-  await execAsync('docker-compose -f docker-compose.test.yml up -d postgres-test redis-test');
+  await execAsync('docker-compose -f docker-compose.test.yml up -d postgres-test');
   
   // Wait for database to be ready
   await new Promise(resolve => setTimeout(resolve, 5000));
   
   // Run database migrations
-  process.env.DATABASE_URL = process.env.DATABASE_TEST_URL;
-  await execAsync('npx prisma migrate deploy');
+  // SQL migrations are run in setupTestDatabase function
   
   console.log('Test environment ready');
 }
@@ -1121,10 +1016,7 @@ services:
     volumes:
       - postgres_test_data:/var/lib/postgresql/data
 
-  redis-test:
-    image: redis:7-alpine
-    ports:
-      - "6380:6379"
+  # Redis not needed for Phase 1
 
 volumes:
   postgres_test_data:
@@ -1134,7 +1026,7 @@ volumes:
 ```env
 # .env.test
 DATABASE_TEST_URL="postgresql://test:test@localhost:5433/petbnb_test"
-REDIS_TEST_URL="redis://localhost:6380"
+# REDIS_TEST_URL not needed for Phase 1
 MAPBOX_ACCESS_TOKEN="your-test-mapbox-token"
 JWT_SECRET="test-jwt-secret-key"
 UPLOAD_DIR="./test-uploads"
@@ -1243,150 +1135,67 @@ This implementation plan provides the detailed specifications needed for a codin
 
 ---
 
-## Outstanding Issues Between PRD and Implementation Plan
+## Outstanding Issues and Clarifications Needed
 
-### 1. **Map/Location Service Provider Inconsistency** ✅ RESOLVED
-- **PRD**: References "Google Places autocomplete" (line 63)
-- **Implementation**: Uses Mapbox throughout (Mapbox Places, Mapbox Geocoding API, Mapbox GL JS)
-- **Resolution**: Updated PRD to use Mapbox Places for consistency
+### 1. **Inconsistent Technology References** ✅ RESOLVED
+- **Issue**: Plan mentions pnpm workspaces (line 31) but we decided to keep simple structure without workspaces
+- **Issue**: Plan references Prisma in multiple places (lines 171-217, 542, 817-847, 859, 1096, 1209) despite choosing SQL-first approach
+- **Issue**: Plan mentions React 19 and Express 5 in task requirements (lines 131-132) but we're using React 18 and current Express
+- **Resolution**: Updated all references to match our technology decisions
 
-### 2. **Map Implementation Timeline** ✅ RESOLVED
-- **PRD**: Interactive map is part of Phase 1 with detailed requirements (toggle, clustering, heat maps, privacy offset)
-- **Implementation**: Defers all map functionality to Phase 2, only includes toggle buttons as placeholders
-- **Resolution**: Updated implementation plan to include full map functionality in Phase 1
+### 2. **Authentication Confusion** ✅ RESOLVED
+- **Issue**: Phase 1 is supposed to be logged-out only, but API documentation includes auth endpoints (lines 772-778)
+- **Issue**: File upload endpoint requires authentication (line 667, 803) but Phase 1 has no auth
+- **Issue**: Sitter profile endpoints show as protected (lines 789-792) but Phase 1 has no auth
+- **Resolution**: Removed all authentication endpoints and protection requirements
 
-### 3. **Database Technology** ✅ RESOLVED
-- **PRD**: Implies PostGIS usage in CLAUDE.md but not explicitly in PRD
-- **Implementation**: Uses standard PostgreSQL with Prisma ORM and Haversine formula instead of PostGIS spatial functions
-- **Resolution**: Updated implementation to use PostGIS for all spatial operations
+### 3. **File Upload Without Authentication** ✅ RESOLVED
+- **Issue**: Plan includes file upload system (Task 8, lines 658-699) but requires authentication
+- **Issue**: We decided to use placeholder images, so is file upload needed at all?
+- **Resolution**: Removed entire file upload task, updated profile creation to use placeholder images
 
-### 4. **Authentication Scope in Phase 1** ✅ RESOLVED
-- **PRD**: Focuses on logged-out user stories (LO-US-01, LO-US-02, LO-US-03) for Phase 1
-- **Implementation**: Includes full authentication system with JWT, registration, and login
-- **Resolution**: Removed authentication from Phase 1, focusing on logged-out functionality only
+### 4. **Mapbox Token Environment Variable** ✅ RESOLVED
+- **Issue**: Code examples use `process.env.MAPBOX_ACCESS_TOKEN` (lines 307, 317, 341) but we decided to keep `MAPBOX_TOKEN`
+- **Resolution**: Already updated all code examples to use MAPBOX_TOKEN
 
-### 5. **Search Algorithm Complexity** ✅ RESOLVED
-- **PRD**: Specifies complex ranking algorithm with multiple factors (distance, rating, availability, response rate, repeat-client %)
-- **Implementation**: Only implements simple distance-based search
-- **Resolution**: Updated PRD to clarify Phase 1 uses simple distance-based search, complex algorithm deferred to Phase 4
+### 5. **Database Schema Format Confusion** ✅ RESOLVED
+- **Issue**: SQL schema is shown correctly (lines 41-100) but then Prisma schema appears again (lines 171-217)
+- **Resolution**: Already removed Prisma schema and replaced with note about SQL-first approach
 
-### 6. **Missing PRD Features in Implementation** ✅ RESOLVED
-- Response time badges (requires tracking sitter response times)
-- Repeat-client % indicators (requires booking history)
-- Star ratings (requires review system)
-- Service radius overlays on map
-- Heat-map density visualization
-- Multi-pet pricing structure
-- **Resolution**: Added mock data fields for badges/ratings in Phase 1 for visual appeal. Real data implementation deferred to later phases when booking/review systems exist.
+### 6. **Search Service Implementation Issues** ✅ RESOLVED
+- **Issue**: Search service example uses Prisma and joins with users table (lines 537-594) but Phase 1 has no users table
+- **Issue**: SQL query references `sp.userId` and joins with `users` table that doesn't exist
+- **Resolution**: Already updated to JavaScript/SQL without user table joins
 
-### 7. **Technology Stack Alignment** ✅ RESOLVED
-- **CLAUDE.md**: Specifies React 19 RC, Express 5 RC, SQL-first approach
-- **Implementation Plan**: Uses React 18, NestJS 10, Prisma ORM
-- **Resolution**: Updated implementation plan to use CLAUDE.md stack (React 19, Express 5, SQL-first with PostGIS)
+### 7. **Test Setup Inconsistencies** ✅ RESOLVED
+- **Issue**: Test setup references Prisma migrations (lines 834-836, 1096) but we're using SQL migrations
+- **Issue**: Test code uses Prisma client extensively despite SQL-first approach
+- **Issue**: Redis mentioned in test setup (line 1089, 1124) but not needed for Phase 1
+- **Resolution**: Updated all test examples to use node-postgres, removed Redis references
 
-### 8. **URL State for Filters** ✅ RESOLVED
-- **PRD**: Specifies extended URL state for all filter parameters
-- **Implementation**: Mentions URL state but doesn't implement extended filter parameters
-- **Resolution**: Updated implementation to include full URL state for all filter parameters
+### 8. **Design System Contradiction** ✅ RESOLVED
+- **Issue**: UI Component Library section mentions "Tailwind CSS utility classes" (line 250) but we're using plain CSS
+- **Resolution**: Updated design system to use plain CSS with BEM naming and CSS variables
 
-### 9. **Trust & Safety Features** ✅ RESOLVED
-- **PRD**: Includes background checks and platform guarantees as core features
-- **Implementation**: No trust & safety implementation in Phase 1
-- **Resolution**: Updated PRD to clarify Trust & Safety features are Phase 3
+### 9. **API Endpoint Confusion** ✅ RESOLVED
+- **Issue**: Search endpoints reference "Google Places proxy" (line 798) but we're using Mapbox
+- **Resolution**: Already updated to reference Mapbox Places autocomplete proxy
 
-### 10. **Business Model Implementation** ✅ RESOLVED
-- **PRD**: Details platform fees (15% sitter, 3-5% owner) and payment structure
-- **Implementation**: No fee or payment implementation in Phase 1
-- **Resolution**: Updated PRD to clarify Booking & Payments are Phase 3
-
-### Summary of Resolutions:
-
-All 10 outstanding issues have been resolved through the following decisions:
-
-1. ✅ **Mapbox** is the chosen location service provider throughout
-2. ✅ **Maps included in Phase 1** with full interactive functionality
-3. ✅ **PostGIS** for all spatial database operations
-4. ✅ **No authentication in Phase 1** - focus on logged-out functionality
-5. ✅ **Simple distance-based search** for Phase 1, complex algorithm deferred
-6. ✅ **Visual badges with mock data** included for better UI appeal
-7. ✅ **CLAUDE.md tech stack** adopted (React 19, Express 5, SQL-first)
-8. ✅ **Full URL state** for all filter parameters
-9. ✅ **Trust & Safety deferred** to Phase 3
-10. ✅ **Payments deferred** to Phase 3
-
-The implementation plan and PRD are now fully aligned with clear phase boundaries and technology choices.
+### 10. **Missing Sitter Creation Endpoint** ✅ RESOLVED
+- **Issue**: We need a way to create sitter profiles without authentication, but no clear endpoint is defined
+- **Resolution**: Already added `POST /sitters` as a public endpoint in API documentation
 
 ---
 
-## Codebase vs Implementation Plan Differences
+### Summary
 
-After examining the current codebase, the following differences were identified between what the implementation plan assumes and what actually exists:
+All 10 outstanding issues have been resolved. The implementation plan is now internally consistent and ready for implementation with:
+- Simplified technology stack (React 18, JavaScript Express, SQL-first approach)
+- No authentication in Phase 1 (logged-out functionality only)
+- Placeholder images instead of file uploads
+- Consistent use of Mapbox for all location services
+- Clear API endpoints for public sitter management
+- Test setup using node-postgres without Redis
+- Plain CSS design system
 
-### 1. **Application Domain Mismatch** ✅ RESOLVED
-- **Plan**: PetBnB application for pet sitters and owners
-- **Codebase**: Restaurant discovery application with spatial features
-- **Resolution**: Replace entire restaurant domain with PetBnB domain model
-
-### 2. **Frontend Technology Stack** ✅ RESOLVED
-- **Plan**: React 19 (RC), Zustand, React Hook Form, Tailwind CSS, React Router
-- **Codebase**: React 18, SWR for data fetching, plain CSS, no routing (SPA)
-- **Resolution**: Keep the simpler existing stack (React 18, SWR, plain CSS)
-
-### 3. **Backend Architecture** ✅ RESOLVED
-- **Plan**: Express 5 with TypeScript
-- **Codebase**: Express with plain JavaScript (`simplified-server.js`)
-- **Resolution**: Keep JavaScript for backend (simpler, no compilation needed)
-
-### 4. **Database Schema** ✅ RESOLVED
-- **Plan**: Complex sitter profiles with user authentication
-- **Codebase**: Simple restaurants table with PostGIS location
-- **Resolution**: Drop existing schema and recreate with PetBnB sitter_profiles table
-
-### 5. **API Endpoints** ✅ RESOLVED
-- **Plan**: `/auth/*`, `/sitters/*`, `/search/*` endpoints
-- **Codebase**: `/api/restaurants` and `/api/restaurants/nearby` only
-- **Resolution**: Create new endpoint files for PetBnB API (keep restaurant code as reference)
-
-### 6. **State Management** ✅ RESOLVED
-- **Plan**: Zustand for global state
-- **Codebase**: SWR for server state only
-- **Resolution**: Use SWR for now, add global state solution later if needed
-
-### 7. **Testing Setup** ✅ RESOLVED
-- **Plan**: Separate Jest for API tests
-- **Codebase**: Unified Vitest for all tests
-- **Resolution**: Keep Vitest for all tests (simpler unified setup)
-
-### 8. **Build Configuration** ✅ RESOLVED
-- **Plan**: TypeScript compilation for backend
-- **Codebase**: Direct JavaScript execution
-- **Resolution**: Keep direct JavaScript execution (no build step needed)
-
-### 9. **Environment Variables** ✅ RESOLVED
-- **Plan**: `MAPBOX_ACCESS_TOKEN`
-- **Codebase**: `MAPBOX_TOKEN`
-- **Resolution**: Keep existing MAPBOX_TOKEN variable name
-
-### 10. **Missing Features in Codebase** ✅ RESOLVED
-- No authentication system - **Resolution**: Not needed for Phase 1 (logged-out only)
-- No file upload capability - **Resolution**: Use placeholder images for sitter profiles
-- No form validation beyond Zod schemas - **Resolution**: Zod is sufficient for Phase 1
-- No monorepo structure - **Resolution**: Keep simple structure, no workspaces needed
-- No Redis service - **Resolution**: Not needed for Phase 1 (no sessions/caching)
-
-### Summary of Technology Decisions
-
-All 10 codebase differences have been resolved with the following decisions:
-
-1. ✅ **Replace restaurant domain** entirely with PetBnB
-2. ✅ **Keep simpler frontend stack** (React 18, SWR, plain CSS)
-3. ✅ **Keep JavaScript backend** (no TypeScript compilation)
-4. ✅ **Drop and recreate database** with PetBnB schema
-5. ✅ **Create new API endpoints** alongside existing code
-6. ✅ **Use SWR only** for now, add global state if needed
-7. ✅ **Keep Vitest** for all testing
-8. ✅ **No build step** for backend JavaScript
-9. ✅ **Keep MAPBOX_TOKEN** variable name
-10. ✅ **Use placeholders** instead of file uploads, skip Redis/auth for Phase 1
-
-The simplified technology choices from the existing codebase are well-suited for a Phase 1 MVP. The core PostGIS spatial functionality can be directly reused for the sitter location features.
+The plan provides a clear path to build Phase 1 with the existing codebase structure and technology choices.
