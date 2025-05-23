@@ -60,7 +60,7 @@ Pet owners must evaluate sitter options instantly—without account friction—w
 #### Requirements (delta additions)
 
 0. **Landing Page Search**
-   - Location input with Google Places autocomplete
+   - Location input with Mapbox Places autocomplete
    - Date range picker (Check‑in / Check‑out)
    - Pet type selector (Dog, Cat, Other)
    - Number of pets (with "+" button to add additional pets with type/size)
@@ -79,7 +79,7 @@ Pet owners must evaluate sitter options instantly—without account friction—w
    - **Response Time** badge (derived from median of last 30 enquiries; new sitters show "New Sitter" badge instead).
    - **Repeat‑client %** indicator (calculated from last 12 months; minimum 5 bookings to display).
    - Two service price points shown if sitter offers multiple services (e.g., Boarding from \$45 · Day Care from \$30).
-4. **Ranking Algorithm (v0.5)** – Score = 0.4 × Distance (normalised 0-1 where 0 = 0 miles, 1 = 50+ miles) + 0.25 × Rating + 0.15 × Availability match + 0.1 × Response Rate + 0.1 × Repeat‑client %.  Tunable weights stored in Config.
+4. **Ranking Algorithm** – Phase 1: Simple distance-based ordering. Phase 4: Score = 0.4 × Distance (normalised 0-1 where 0 = 0 miles, 1 = 50+ miles) + 0.25 × Rating + 0.15 × Availability match + 0.1 × Response Rate + 0.1 × Repeat‑client %.  Tunable weights stored in Config.
 5. **Sort Options** – Distance (default), Price (asc), Rating (desc).
 6. **URL‑driven State** extended to `petSize`, `specialNeeds[]`, `sort`, `petType`, `services[]`, `priceMin`, `priceMax`.
 
@@ -146,7 +146,7 @@ Scenario: Privacy offset on pins
 
 
 
-### 3  Trust & Safety
+### 3  Trust & Safety (Phase 3)
 
 #### Background Checks
 - **Sitter Requirements**
@@ -161,7 +161,7 @@ Scenario: Privacy offset on pins
 - **Secure Payments** – All payments processed through platform, held in escrow until 24h after service starts
 - **Review System** – Two‑way reviews after each booking completion
 
-### 4  Booking & Payments
+### 4  Booking & Payments (Phase 3)
 
 #### Booking Flow
 1. **Service Selection** – Choose service type, dates, and add pet details
