@@ -1,0 +1,6 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#E6F3FF"/>
+  <circle cx="200" cy="150" r="60" fill="#B8D4E8"/>
+  <ellipse cx="200" cy="280" rx="80" ry="60" fill="#B8D4E8"/>
+  <text x="200" y="360" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#5A8AAE">Pet Sitter</text>
+</svg>

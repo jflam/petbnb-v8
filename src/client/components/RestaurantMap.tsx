@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { useSearchParams } from 'react-router-dom';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
@@ -41,12 +42,27 @@ const DistanceControl = ({ value, onChange }: { value: number, onChange: (value:
 };
 
 const RestaurantMap: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const { location, loading: locationLoading } = useUserLocation();
   const [searchDistance, setSearchDistance] = useState(5);
   const [mode, setMode] = useState<'nearby' | 'all'>('nearby');
   const [mapboxToken, setMapboxToken] = useState('');
   const [cuisineFilter, setCuisineFilter] = useState('All');
   const [priceFilter, setPriceFilter] = useState('All');
+  
+  // Extract search parameters
+  const searchLat = searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : null;
+  const searchLng = searchParams.get('lng') ? parseFloat(searchParams.get('lng')!) : null;
+  const searchLocation = searchParams.get('location');
+  const checkIn = searchParams.get('checkIn');
+  const checkOut = searchParams.get('checkOut');
+  const petType = searchParams.get('petType');
+  const serviceType = searchParams.get('serviceType');
+  
+  // Use search coordinates if available, otherwise use user location
+  const effectiveLocation = searchLat && searchLng 
+    ? { lat: searchLat, lng: searchLng }
+    : location;
   
   // Fetch Mapbox token from server
   useEffect(() => {
@@ -71,8 +87,8 @@ const RestaurantMap: React.FC = () => {
     isLoading: nearbyLoading,
     error: nearbyError
   } = useNearbyRestaurants(
-    location?.lng || -122.3321,
-    location?.lat || 47.6062,
+    effectiveLocation?.lng || -122.3321,
+    effectiveLocation?.lat || 47.6062,
     searchDistance
   );
   
@@ -130,12 +146,30 @@ const RestaurantMap: React.FC = () => {
     return <div>Error loading restaurants: {error.toString()}</div>;
   }
 
-  const mapPosition: L.LatLngExpression = location 
-    ? [location.lat, location.lng]
+  const mapPosition: L.LatLngExpression = effectiveLocation 
+    ? [effectiveLocation.lat, effectiveLocation.lng]
     : [47.6062, -122.3321]; // Seattle fallback
   
   return (
     <div>
+      {/* Search Summary */}
+      {searchLocation && (
+        <div className="search-summary">
+          <h2>Pet Care Services near {searchLocation}</h2>
+          <div className="search-summary__details">
+            {checkIn && checkOut && (
+              <span>📅 {checkIn} to {checkOut}</span>
+            )}
+            {petType && (
+              <span>🐾 {petType.charAt(0).toUpperCase() + petType.slice(1)}</span>
+            )}
+            {serviceType && serviceType !== 'all' && (
+              <span>🏠 {serviceType.replace(/([A-Z])/g, ' $1').trim()}</span>
+            )}
+          </div>
+        </div>
+      )}
+      
       <FilterBar
         cuisineFilter={cuisineFilter}
         setCuisineFilter={setCuisineFilter}

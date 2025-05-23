@@ -1,188 +1,121 @@
-# Modern Spatial Data Web Application Starter App
+# PetBnB - Find Trusted Pet Sitters Near You
 
-A modern full-stack application starter app with spatial data capabilities built with:
-
-- React with TypeScript for the frontend
-- Vite 6 for fast development and optimized builds
-- Express 5 (RC) for the backend API
-- PostgreSQL 15 with PostGIS 3.4 for spatial data
-- Docker setup for easy development and deployment
+PetBnB is a marketplace connecting pet owners with trusted pet sitters in their area. Think of it as Airbnb for pet care.
 
 ## Features
 
-- SQL-first approach with node-pg-migrate for migrations
-- Raw SQL queries using pg driver (no ORM)
-- Leaflet for interactive maps
-- Spatial queries with PostGIS:
-  - Find restaurants within a specified radius
-  - Calculate distances between points
-  - Store and retrieve geographic coordinates
-- Comprehensive testing setup with Vitest and Playwright
-- Docker Compose configuration for local development
-- Multi-stage Docker build for production
+- 🗺️ Interactive map showing sitters near you
+- 🔍 Location-based search with Mapbox integration
+- 🎨 Studio Ghibli-style AI-generated sitter portraits
+- ⭐ Ratings and reviews (mock data in Phase 1)
+- 🏅 Visual badges for verified sitters
+- 📱 Responsive design for mobile and desktop
+
+## Tech Stack
+
+- **Frontend**: React 18, SWR, Mapbox GL JS
+- **Backend**: Express.js 5 (RC), PostgreSQL 15 with PostGIS
+- **Build**: Vite 6
+- **Testing**: Vitest, Playwright
+- **Styling**: Plain CSS with BEM convention
+
+## Prerequisites
+
+- Node.js 20+
+- PostgreSQL 15 with PostGIS extension
+- Mapbox API token (get one free at https://mapbox.com)
+- OpenAI API key (for image generation)
 
 ## Quick Start
 
 ```bash
 # Clone the repository
-git clone https://github.com/jflam/ai-starter-app-postgis.git
-cd ai-starter-app-postgis
+git clone [your-repo-url]
+cd petbnb-v8
 
 # Install dependencies
 npm install
 
-# Set up environment variables
-# You will register and obtain a free Mapbox token otherwise the map will not render
-# https://docs.mapbox.com/help/getting-started/access-tokens/
-
+# Create .env file with your API keys
 cp .env.example .env
+# Edit .env and add your API keys
 
-# Start development servers (automatically starts database, runs migrations, and opens the browser)
+# Start PostgreSQL with PostGIS (using Docker)
+docker-compose up -d postgres
+
+# Run database migrations
+npm run migrate
+
+# Generate Studio Ghibli images and seed data
+npm run seed:full
+
+# Start development servers
 npm run dev
 ```
 
-> **Note:** The `npm run dev` command will automatically:
-> - Start PostgreSQL and PostGIS with Docker
-> - Wait for the database to be ready
-> - Run migrations if needed
-> - Start frontend and backend development servers
-> - Open your default browser to the frontend application
+> **Note:** The app will be available at:
+> - Frontend: http://localhost:5173
+> - API: http://localhost:3001
 
-## Database
-
-The application uses PostgreSQL with the PostGIS extension for spatial data handling. This enables:
-
-- Storing restaurant locations as geometric points using the POINT data type
-- Querying restaurants within a certain distance of a location using ST_DWithin
-- Calculating the distance between points using ST_Distance
-
-Key SQL queries used in the application:
-
-```sql
--- Find all restaurants within a 5km radius of a point
-SELECT id, name, ST_Distance(location::geography, ST_MakePoint(-122.3321, 47.6062)::geography) / 1000 AS distance_km
-FROM restaurants
-WHERE ST_DWithin(location::geography, ST_MakePoint(-122.3321, 47.6062)::geography, 5000)
-ORDER BY distance_km;
-```
-
-For more information on database setup and management, see [DATABASE.md](DATABASE.md).
-
-## Directory Structure
-
-```
-project-root/
-├── data/                      # Data files
-│   └── table.csv              # Restaurant data
-├── migrations/                # SQL migration files
-│   ├── 001_init.sql           # Schema & GiST index
-│   └── 002_seed_marker.sql    # Marks seed completion
-├── scripts/                   # Utility scripts
-│   ├── entrypoint.sh          # Docker entrypoint
-│   ├── seed.ts                # CSV import script
-│   └── wait-for-it.sh         # Service wait script
-├── src/
-│   ├── client/                # Frontend React application
-│   │   ├── components/        # UI components
-│   │   ├── hooks/             # Custom React hooks
-│   │   ├── pages/             # Page components
-│   │   ├── services/          # API clients
-│   │   ├── types/             # TypeScript definitions
-│   │   └── utils/             # Utility functions
-│   └── server/                # Backend Express application
-│       ├── controllers/       # Request handlers
-│       ├── db/                # Database utilities
-│       │   └── postgis/       # PostGIS specific functions
-│       ├── middleware/        # Express middleware
-│       ├── routes/            # API routes
-│       ├── types/             # TypeScript definitions
-│       └── utils/             # Utility functions
-├── tests/                     # Test files
-│   ├── client/                # Frontend tests
-│   └── server/                # Backend tests
-├── .env.example               # Environment variables template
-├── docker-compose.yml         # Docker services config
-├── Dockerfile                 # Multi-stage Docker build
-├── package.json               # Project dependencies
-├── tsconfig.json              # TypeScript config (client)
-└── tsconfig.server.json       # TypeScript config (server)
-```
-
-## Available Commands
+## Development Commands
 
 ```bash
 # Development
-npm run dev          # Start Docker database, both client and server, and open browser
-npm run dev:client   # Start Vite dev server only
-npm run dev:server   # Start Express server only
+npm run dev                # Start both client and server
+npm run dev:client         # Start Vite dev server only
+npm run dev:server         # Start Express server only
 
 # Database
-npm run migrate      # Run database migrations
-npm run seed         # Seed the database with sample data
-
-# Building
-npm run build        # Build both client and server
-npm run build:client # Build client only
-npm run build:server # Build server only
+npm run migrate            # Run database migrations
+npm run seed              # Seed database with sample data
+npm run generate-images   # Generate AI images for sitters
+npm run seed:full         # Generate images + seed data
 
 # Testing
-npm run test         # Run all unit and API tests
-npm run test:client  # Run client tests
-npm run test:server  # Run server tests
-npm run test:e2e     # Run end-to-end tests
+npm run test              # Run unit tests
+npm run test:client       # Run client tests only
+npm run test:server       # Run server tests only
+npm run test:e2e          # Run end-to-end tests
 
 # Quality
-npm run typecheck    # Run TypeScript type checking
-npm run lint         # Run ESLint
+npm run typecheck         # Run TypeScript type checking
+npm run lint              # Run ESLint
 ```
 
-## Technologies Used
+## Project Structure
 
-### Backend
-- Node.js 20 LTS
-- Express 5.0.0-rc.1
-- PostgreSQL 15.5
-- PostGIS 3.4.2
-- node-pg-migrate 7.x
-- pg driver 8.x
-- Zod for validation
-
-### Frontend
-- React 18
-- Vite 6.0.0
-- Leaflet for maps
-- SWR for data fetching
-
-### Testing
-- Vitest 3.1.3 (unified test runner for client and server)
-- Playwright 1.44.x (end-to-end tests)
-- Testcontainers (database testing)
-
-## Docker Support
-
-The project includes Docker and Docker Compose configuration for both development and production environments.
-
-### Development
-
-```bash
-# Start all services in development mode
-docker-compose up -d
-
-# View logs
-docker-compose logs -f
+```
+├── migrations/          # SQL migration files
+├── scripts/            # Build and setup scripts
+├── src/
+│   ├── client/         # React frontend
+│   │   ├── components/ # React components
+│   │   ├── hooks/      # Custom React hooks
+│   │   └── utils/      # Utility functions
+│   └── server/         # Express backend
+│       └── db.js       # Database connection
+├── tests/              # Test files
+└── public/             # Static assets
 ```
 
-### Production
+## API Endpoints
 
-```bash
-# Build production image
-docker build -t ai-starter-app-postgis:latest .
+- `GET /api/sitters/search` - Search for sitters by location
+- `GET /api/sitters/:id` - Get sitter profile details
+- `GET /api/mapbox/geocode` - Proxy for Mapbox geocoding
 
-# Run container
-docker run -p 3001:3001 -e DATABASE_URL=******host:5432/db ai-starter-app-postgis:latest
-```
+## Phase 1 Features (Current)
 
-For detailed Docker setup instructions, container configurations, and production deployment options, see the [Docker Guide](docs/docker.md).
+- Landing page with location search
+- Search results with map/list view
+- Sitter profile pages
+- Distance-based search using PostGIS
+- Mock data for ratings and reviews
+
+## Future Phases
+
+- Phase 2: Authentication, messaging, booking
+- Phase 3: Payments, reviews, trust & safety
 
 ## License
 

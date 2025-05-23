@@ -1,0 +1,73 @@
+/* Header Styles */
+.app-header {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-header__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Logo */
+.app-header__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: #2d3748;
+  transition: color 0.2s;
+}
+
+.app-header__logo:hover {
+  color: #667eea;
+}
+
+.app-header__logo-icon {
+  font-size: 1.5rem;
+}
+
+.app-header__logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* Navigation */
+.app-header__nav {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.app-header__link {
+  text-decoration: none;
+  color: #4a5568;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.app-header__link:hover {
+  color: #667eea;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .app-header__container {
+    padding: 1rem;
+  }
+
+  .app-header__nav {
+    gap: 1rem;
+  }
+
+  .app-header__link {
+    font-size: 0.875rem;
+  }
+}

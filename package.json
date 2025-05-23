@@ -10,6 +10,8 @@
     "build:client": "vite build",
     "start": "node src/server/simplified-server.js",
     "seed": "node scripts/seed.js",
+    "generate-images": "node scripts/generate-images.js",
+    "seed:full": "npm run generate-images && npm run seed",
     "migrate": "node-pg-migrate up -m migrations",
     "setup-test-db": "bash ./scripts/setup-test-db.sh",
     "test": "vitest run --coverage",
@@ -21,6 +23,8 @@
     "lint": "eslint . --ext .ts,.tsx"
   },
   "dependencies": {
+    "@types/mapbox-gl": "^3.4.1",
+    "@types/react-router-dom": "^5.3.3",
     "axios": "^1.6.2",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
@@ -31,12 +35,15 @@
     "helmet": "^7.0.0",
     "leaflet": "^1.9.4",
     "leaflet.markercluster": "^1.5.3",
+    "mapbox-gl": "^3.12.0",
+    "node-fetch": "^2.7.0",
     "pg": "^8.15.0",
     "pg-cursor": "^2.10.3",
     "pino": "^8.16.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-leaflet": "^4.2.1",
+    "react-router-dom": "^7.6.0",
     "swr": "^2.2.4",
     "zod": "^3.22.4"
   },
