@@ -114,7 +114,7 @@ async function waitForDatabase() {
 async function setupDatabase() {
   try {
     // Set the correct DATABASE_URL for local development
-    const localDbUrl = "postgres://postgres:postgres@localhost:5432/app_db";
+    const localDbUrl = "postgres://postgres:postgres@localhost:5432/petbnb";
     log(`Using database URL: ${localDbUrl}`, colors.blue);
     
     // Set environment variable for child processes

@@ -5,7 +5,7 @@ const { Pool } = require('pg');
 async function checkDatabase() {
   // Create a connection pool
   const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost:5432/app_db'
+    connectionString: process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost:5432/petbnb'
   });
 
   try {

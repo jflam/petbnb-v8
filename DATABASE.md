@@ -48,12 +48,12 @@ The application uses the `DATABASE_URL` environment variable to connect to the d
 
 Default connection string:
 ```
-postgres://postgres:postgres@localhost:5432/app_db
+postgres://postgres:postgres@localhost:5432/petbnb
 ```
 
 If you're using Docker, the connection string will be:
 ```
-postgres://postgres:postgres@postgres:5432/app_db
+postgres://postgres:postgres@postgres:5432/petbnb
 ```
 
 ## Troubleshooting
@@ -77,7 +77,7 @@ If you encounter issues with the database setup:
 3. **Connect directly to the database**
 
    ```bash
-   docker exec -it ai-starter-app-postgis_postgres_1 psql -U postgres -d app_db
+   docker exec -it ai-starter-app-postgis_postgres_1 psql -U postgres -d petbnb
    ```
 
    Once connected, you can check tables:
