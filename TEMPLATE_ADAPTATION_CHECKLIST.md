@@ -151,6 +151,16 @@ This checklist ensures all configuration values are consistent across the codeba
 - [ ] Update issue templates
 - [ ] Update PR templates
 
+### 11. Test Suite Adaptation
+- [ ] **Component Tests**: Update all hardcoded text (e.g., "Top Asian Noodles" → "PetBnB")
+- [ ] **API Tests**: Update endpoints and expected responses
+- [ ] **E2E Tests**: These require COMPLETE REWRITING
+  - [ ] Disable/delete all template e2e tests
+  - [ ] Document new user flows for your domain
+  - [ ] Write new e2e tests from scratch
+  - [ ] Update all selectors to match new UI
+- [ ] **Test Data**: Update all fixtures and mocks
+
 ## Validation Criteria
 ✅ All checks above are completed
 ✅ `validate-config.js` passes with no errors

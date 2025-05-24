@@ -252,6 +252,8 @@ Grid: { cols: number, gap?: 'sm' | 'md' | 'lg', children: ReactNode }
 - Components work on mobile and desktop viewports
 - Storybook documentation for each component
 
+**CRITICAL**: When writing component tests, ensure you've completed the Template Adaptation Checklist first. Component tests often contain hardcoded text from the original template (e.g., "Top Asian Noodles" instead of "PetBnB") that must be updated to match your actual components.
+
 ### 4. Landing Page with Search
 
 **Objective:** Create compelling landing page with integrated search functionality.
@@ -1210,6 +1212,18 @@ describe('AuthService Integration Tests', () => {
 - API parameter validation
 
 ### End-to-End Tests (Complete User Workflows)
+
+**CRITICAL WARNING**: E2E tests from templates require COMPLETE REWRITING, not just text updates. Common issues include:
+- Wrong page titles and headers (e.g., "Restaurant Explorer" → "PetBnB")
+- Wrong CSS selectors (e.g., `.restaurant-card` → `.sitter-card`)
+- Wrong UI elements (e.g., cuisine filters → pet type filters)
+- Wrong user flows (e.g., browsing restaurants → searching for sitters)
+- Wrong data attributes (e.g., rating, cuisine → experience, pet preferences)
+
+**DO NOT attempt to adapt existing e2e tests. Instead:**
+1. Complete the Template Adaptation Checklist
+2. Delete or disable all template e2e tests
+3. Write new e2e tests from scratch based on your actual UI components and user flows
 
 #### 7. Complete User Registration and Sitter Onboarding Flow
 **File:** `apps/frontend/e2e/sitter-onboarding.spec.ts`
