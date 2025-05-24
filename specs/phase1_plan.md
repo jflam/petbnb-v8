@@ -123,6 +123,42 @@ IMAGES_DIR="./public/images/profiles"
 
 ---
 
+## Pre-Implementation Checklists
+
+### 0. Template Adaptation Checklist
+
+When adapting this project from a starter template or boilerplate, you MUST complete the template adaptation checklist to ensure all configuration values are properly updated.
+
+**See: [TEMPLATE_ADAPTATION_CHECKLIST.md](../TEMPLATE_ADAPTATION_CHECKLIST.md)**
+
+This comprehensive checklist covers:
+- Database name consistency (e.g., `app_db` → `petbnb`)
+- Application name updates across all files
+- Package and module references
+- Environment variable renaming
+- Docker configuration updates
+- Automated validation scripts
+
+**Important Note:** The template adaptation checklist MUST be completed before proceeding to any other tasks. Configuration inconsistencies become exponentially harder to fix as development progresses.
+
+### 1. Schema-Code Alignment Checklist
+
+After template adaptation and before implementing features, you MUST complete the schema-code alignment checklist to ensure database schema, API endpoints, and tests are properly synchronized.
+
+**See: [SCHEMA_CODE_ALIGNMENT_CHECKLIST.md](../SCHEMA_CODE_ALIGNMENT_CHECKLIST.md)**
+
+This critical checklist prevents the common failure pattern where database schema, API endpoints, and tests become misaligned during development.
+
+This checklist covers:
+- Schema verification after migrations
+- API-Database field mapping documentation
+- Endpoint implementation verification
+- Legacy endpoint handling strategies
+- Test alignment validation
+- Common pitfalls and type mismatches
+
+**Important Note:** Both pre-implementation checklists MUST be completed in order before proceeding to implementation tasks.
+
 ## Implementation Tasks
 
 ### 1. Project Foundation & Monorepo Setup
@@ -894,6 +930,8 @@ GET /images/profiles/*               # Generated Studio Ghibli images
 ### Testing Philosophy
 All tests must validate the actual implementation without mocking core business logic. Tests should use real database connections, actual API calls, and genuine user interactions to ensure the system works as intended in production.
 
+**CRITICAL**: Before writing any tests, complete the Schema-Code Alignment Checklist (see above). This ensures that your tests are testing the actual implementation, not an outdated schema or mismatched field names.
+
 ### Test Database Setup
 ```javascript
 // test/setup/database.js
@@ -935,6 +973,50 @@ module.exports = { pool as testDb, setupTestDatabase, cleanupTestDatabase };
 ```
 
 ### Unit Tests (No Mocking of Business Logic)
+
+#### 0. Field Mapping Validation Test (MUST RUN FIRST)
+**File:** `tests/server/field-mapping.test.ts`
+
+**Purpose:** Validates that database schema, API request fields, and API response fields are properly aligned. This test MUST pass before writing any other tests.
+
+**Test Implementation:**
+```javascript
+describe('Field Mapping Validation', () => {
+  it('should have correct field mapping between database and API', async () => {
+    // Test sitter creation with all fields
+    const testData = {
+      firstName: 'Test',
+      lastName: 'User',
+      email: 'fieldtest@example.com',
+      // ... all fields per schema
+    };
+    
+    // Create via API
+    const response = await request(app)
+      .post('/api/sitters')
+      .send(testData);
+    
+    expect(response.status).toBe(201);
+    
+    // Verify response field names match expected format
+    expect(response.body).toHaveProperty('first_name', 'Test');
+    expect(response.body).toHaveProperty('last_name', 'User');
+    
+    // Query database directly to verify storage
+    const { rows } = await pool.query(
+      'SELECT * FROM sitter_profiles WHERE id = $1',
+      [response.body.id]
+    );
+    
+    // Verify database columns match
+    expect(rows[0].first_name).toBe('Test');
+    expect(rows[0].last_name).toBe('User');
+    
+    // Clean up
+    await pool.query('DELETE FROM sitter_profiles WHERE id = $1', [response.body.id]);
+  });
+});
+```
 
 #### 1. Authentication Service Tests
 **File:** `apps/backend/src/auth/auth.service.spec.ts`
