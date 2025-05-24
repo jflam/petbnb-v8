@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('PetBnB Sitter Search', () => {
   // Helper function to navigate to search results
-  async function navigateToSearchResults(page) {
+  async function navigateToSearchResults(page: import('@playwright/test').Page) {
     await page.goto('/search?location=Seattle%2C%20WA&lat=47.6062&lng=-122.3321&checkIn=2024-12-01&checkOut=2024-12-05&petType=dog&petCount=1&serviceType=boarding');
     // Wait for sitters to load
     await page.waitForSelector('.sitter-card', { timeout: 10000 });
@@ -52,7 +52,7 @@ test.describe('PetBnB Sitter Search', () => {
     
     // Get first sitter's price before sorting
     const firstPriceElement = page.locator('.sitter-card').first().locator('span:has-text("$")').first();
-    const firstSitterPrice = await firstPriceElement.textContent();
+    const _firstSitterPrice = await firstPriceElement.textContent();
     
     // Sort by price
     await sortDropdown.selectOption('price');

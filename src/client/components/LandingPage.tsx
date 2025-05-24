@@ -36,6 +36,7 @@ const LandingPage: React.FC = () => {
   const locationInputRef = useRef<HTMLInputElement>(null);
 
   // Debounced location search
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const searchLocations = useCallback(
     debounce(async (query: string) => {
       if (query.length < 3) {
@@ -199,7 +200,7 @@ const LandingPage: React.FC = () => {
                   id="petType"
                   className="search-form__select"
                   value={formData.petType}
-                  onChange={(e) => setFormData({ ...formData, petType: e.target.value as any })}
+                  onChange={(e) => setFormData({ ...formData, petType: e.target.value as 'dog' | 'cat' | 'other' })}
                 >
                   <option value="dog">Dog</option>
                   <option value="cat">Cat</option>

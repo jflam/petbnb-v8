@@ -18,7 +18,7 @@ test.beforeEach(async ({ page }) => {
   await expect(page.locator(sitterCardSelector).first()).toBeVisible({ timeout: 10000 });
 });
 
-test.skip('clicking a sitter card centers the map', async ({ page }) => {
+test.skip('clicking a sitter card centers the map', async () => {
   // Skip: This feature requires access to Mapbox GL JS internals
   // and the current implementation may not support programmatic map centering on card click
 });
@@ -27,7 +27,7 @@ test('sitter card selection and detail display', async ({ page }) => {
   // Cards are already loaded due to beforeEach
 
   const firstSitterCard = page.locator(sitterCardSelector).first();
-  const sitterName = await firstSitterCard.locator('h3').textContent();
+  const _sitterName = await firstSitterCard.locator('h3').textContent();
 
   await firstSitterCard.click();
 

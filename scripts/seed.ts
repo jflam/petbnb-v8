@@ -8,7 +8,21 @@ dotenv.config();
 // Create a new pool instance for this script
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const csv = readFileSync('data/table.csv', 'utf8');
-const rows: any[] = parse(csv, { columns: true });
+interface RestaurantRow {
+  rank: string;
+  name: string;
+  city: string;
+  address: string;
+  cuisine_type: string;
+  specialty: string;
+  yelp_rating: string;
+  price_range: string;
+  image_url: string;
+  lat: string;
+  lon: string;
+}
+
+const rows: RestaurantRow[] = parse(csv, { columns: true });
 
 (async () => {
   try {

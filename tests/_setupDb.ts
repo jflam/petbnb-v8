@@ -1,6 +1,5 @@
-import { GenericContainer } from 'testcontainers';
+import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { execa } from 'execa';
-import path from 'path';
 
 export async function startPg() {
   // Start PostGIS container
@@ -42,7 +41,7 @@ export async function setup() {
   return container;
 }
 
-export async function teardown(container: any) {
+export async function teardown(container: StartedTestContainer) {
   if (container) {
     await container.stop();
     console.log('Database container stopped');

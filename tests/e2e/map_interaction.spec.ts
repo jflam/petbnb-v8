@@ -2,17 +2,19 @@ import { test, expect } from '@playwright/test';
 
 const mapMarkerSelector = '.custom-marker'; // Using custom markers from SearchResults
 const sitterCardSelector = '.sitter-card';
-const mapboxPopupContentSelector = '.mapboxgl-popup-content';
+const _mapboxPopupContentSelector = '.mapboxgl-popup-content';
 const mapSelector = '.mapboxgl-map'; // Selector for the map container itself
 const zoomInButtonSelector = '.mapboxgl-ctrl-zoom-in';
 
 // Helper to get map center
-const getMapCenter = async (page) => {
+const getMapCenter = async (page: import('@playwright/test').Page) => {
   return await page.evaluate(() => {
     // @ts-expect-error Accessing Mapbox's internal map object
     const mapCanvas = document.querySelector('.mapboxgl-canvas');
     const mapContainer = mapCanvas?.closest('.mapboxgl-map');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (mapContainer && (mapContainer as any)._mapboxgl) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const map = (mapContainer as any)._mapboxgl;
       const center = map.getCenter();
       return { lat: center.lat, lng: center.lng };
@@ -22,12 +24,14 @@ const getMapCenter = async (page) => {
 };
 
 // Helper to get zoom level
-const getMapZoom = async (page) => {
+const getMapZoom = async (page: import('@playwright/test').Page) => {
   return await page.evaluate(() => {
     // @ts-expect-error Accessing Mapbox's internal map object
     const mapCanvas = document.querySelector('.mapboxgl-canvas');
     const mapContainer = mapCanvas?.closest('.mapboxgl-map');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (mapContainer && (mapContainer as any)._mapboxgl) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const map = (mapContainer as any)._mapboxgl;
       return map.getZoom();
     }

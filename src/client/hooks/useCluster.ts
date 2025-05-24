@@ -5,7 +5,7 @@ import { Restaurant } from './useRestaurants';
 
 // Add declaration for missing type from leaflet.markercluster
 declare module 'leaflet' {
-  function markerClusterGroup(options?: any): L.MarkerClusterGroup;
+  function markerClusterGroup(options?: L.MarkerClusterGroupOptions): L.MarkerClusterGroup;
   interface MarkerClusterGroup extends L.FeatureGroup {}
 }
 
