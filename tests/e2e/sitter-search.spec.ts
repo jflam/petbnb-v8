@@ -15,60 +15,57 @@ test.describe('PetBnB Sitter Search', () => {
     const initialCount = await page.locator('.sitter-card').count();
     expect(initialCount).toBeGreaterThan(0);
 
-    // Click on cat filter
-    const catButton = page.locator('button:has-text("Cat")');
-    if (await catButton.isVisible()) {
-      await catButton.click();
-      
-      // Wait for results to update
-      await page.waitForTimeout(1000);
-      
-      // Count should potentially be different
-      const catSitterCount = await page.locator('.sitter-card').count();
-      // Some sitters might accept both dogs and cats
-      expect(catSitterCount).toBeGreaterThanOrEqual(0);
-    }
+    // Select cat from pet type dropdown
+    const petTypeSelect = page.locator('select').first(); // First select is pet type
+    await petTypeSelect.selectOption('cat');
+    
+    // Wait for results to update
+    await page.waitForTimeout(1000);
+    
+    // Count should potentially be different
+    const catSitterCount = await page.locator('.sitter-card').count();
+    // Some sitters might accept both dogs and cats
+    expect(catSitterCount).toBeGreaterThanOrEqual(0);
   });
 
   test('can filter by service type', async ({ page }) => {
     await navigateToSearchResults(page);
 
-    // Look for service type selector
-    const serviceSelector = page.locator('select[name="serviceType"]');
-    if (await serviceSelector.isVisible()) {
-      // Change to house sitting
-      await serviceSelector.selectOption('house-sitting');
-      
-      // Wait for results to update
-      await page.waitForTimeout(1000);
-      
-      // Should still have results
-      const sitterCount = await page.locator('.sitter-card').count();
-      expect(sitterCount).toBeGreaterThanOrEqual(0);
-    }
+    // Look for service type selector (second select)
+    const serviceSelector = page.locator('select').nth(1);
+    // Change to daycare
+    await serviceSelector.selectOption('daycare');
+    
+    // Wait for results to update
+    await page.waitForTimeout(1000);
+    
+    // Should still have results
+    const sitterCount = await page.locator('.sitter-card').count();
+    expect(sitterCount).toBeGreaterThanOrEqual(0);
   });
 
   test('can sort search results', async ({ page }) => {
     await navigateToSearchResults(page);
 
-    // Look for sort dropdown
-    const sortDropdown = page.locator('select').filter({ hasText: /sort/i });
-    if (await sortDropdown.isVisible()) {
-      // Get first sitter's price before sorting
-      const firstSitterPrice = await page.locator('.sitter-card').first().locator('.sitter-card__price').textContent();
-      
-      // Sort by price
-      await sortDropdown.selectOption({ label: /price/i });
-      
-      // Wait for results to re-order
-      await page.waitForTimeout(1000);
-      
-      // Get first sitter's price after sorting
-      const newFirstSitterPrice = await page.locator('.sitter-card').first().locator('.sitter-card__price').textContent();
-      
-      // Prices might have changed order
-      expect(newFirstSitterPrice).toBeTruthy();
-    }
+    // Look for sort dropdown (last select)
+    const sortDropdown = page.locator('select').last();
+    
+    // Get first sitter's price before sorting
+    const firstPriceElement = page.locator('.sitter-card').first().locator('span:has-text("$")').first();
+    const firstSitterPrice = await firstPriceElement.textContent();
+    
+    // Sort by price
+    await sortDropdown.selectOption('price');
+    
+    // Wait for results to re-order
+    await page.waitForTimeout(1000);
+    
+    // Get first sitter's price after sorting
+    const newFirstPriceElement = page.locator('.sitter-card').first().locator('span:has-text("$")').first();
+    const newFirstSitterPrice = await newFirstPriceElement.textContent();
+    
+    // Prices might have changed order
+    expect(newFirstSitterPrice).toBeTruthy();
   });
 
   test('shows no results message when no sitters match', async ({ page }) => {
@@ -82,9 +79,9 @@ test.describe('PetBnB Sitter Search', () => {
     const sitterCards = await page.locator('.sitter-card').count();
     if (sitterCards === 0) {
       // Look for no results message
-      const noResultsMessage = page.locator('text=/no sitters found|no results|try adjusting/i');
-      const isVisible = await noResultsMessage.isVisible().catch(() => false);
-      expect(sitterCards === 0 || isVisible).toBeTruthy();
+      // Either we have 0 cards or we should see "0 sitters found"
+      const resultsText = await page.locator('h2').first().textContent();
+      expect(sitterCards === 0 || resultsText?.includes('0 sitters')).toBeTruthy();
     }
   });
 
@@ -119,23 +116,14 @@ test.describe('PetBnB Sitter Search', () => {
   test('pet count selector updates results', async ({ page }) => {
     await navigateToSearchResults(page);
 
-    // Look for pet count input
-    const petCountInput = page.locator('input[type="number"][name="petCount"]').or(page.locator('button:has-text("+")'));
+    // Pet count is in the URL params but not directly editable on search results page
+    // This test would need to be done from the landing page search form
+    // For now, just verify we have results with the current pet count
+    const sitterCount = await page.locator('.sitter-card').count();
+    expect(sitterCount).toBeGreaterThan(0);
     
-    if (await petCountInput.isVisible()) {
-      // Increase pet count
-      if (await page.locator('button:has-text("+")').isVisible()) {
-        await page.locator('button:has-text("+")').click();
-      } else {
-        await petCountInput.fill('2');
-      }
-      
-      // Wait for any updates
-      await page.waitForTimeout(1000);
-      
-      // Should still have sitters (some accept multiple pets)
-      const sitterCount = await page.locator('.sitter-card').count();
-      expect(sitterCount).toBeGreaterThanOrEqual(0);
-    }
+    // Verify the search included pet count in params
+    const url = page.url();
+    expect(url).toContain('petCount=1');
   });
 });

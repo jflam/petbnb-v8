@@ -88,6 +88,12 @@ const LandingPage: React.FC = () => {
       petCount: formData.petCount.toString(),
       serviceType: formData.serviceType
     });
+    
+    // Add coordinates if available
+    if (formData.locationCoords) {
+      params.append('lat', formData.locationCoords[1].toString());
+      params.append('lng', formData.locationCoords[0].toString());
+    }
 
     // Navigate to search results
     window.location.href = `/search?${params.toString()}`;

@@ -20,42 +20,41 @@ test.describe('PetBnB Homepage', () => {
     await page.goto('/');
     
     // Check for search form elements
-    const locationInput = page.locator('input[placeholder*="location"]');
+    const locationInput = page.locator('input[placeholder="Enter city or neighborhood"]');
     await expect(locationInput).toBeVisible();
     
-    const checkInInput = page.locator('input[name="checkIn"]');
+    const checkInInput = page.locator('input#checkIn');
     await expect(checkInInput).toBeVisible();
     
-    const checkOutInput = page.locator('input[name="checkOut"]');
+    const checkOutInput = page.locator('input#checkOut');
     await expect(checkOutInput).toBeVisible();
     
-    const searchButton = page.locator('button[type="submit"]');
-    await expect(searchButton).toContainText('Search');
+    const searchButton = page.locator('button:has-text("Search Sitters")');
+    await expect(searchButton).toBeVisible();
   });
 
   test('homepage shows pet type selector', async ({ page }) => {
     await page.goto('/');
     
-    // Check for pet type buttons
-    const dogButton = page.locator('button:has-text("Dog")');
-    await expect(dogButton).toBeVisible();
+    // Check for pet type select dropdown
+    const petTypeSelect = page.locator('select#petType');
+    await expect(petTypeSelect).toBeVisible();
     
-    const catButton = page.locator('button:has-text("Cat")');
-    await expect(catButton).toBeVisible();
-    
-    const otherButton = page.locator('button:has-text("Other")');
-    await expect(otherButton).toBeVisible();
+    // Check for pet type options
+    await expect(petTypeSelect.locator('option[value="dog"]')).toHaveText('Dog');
+    await expect(petTypeSelect.locator('option[value="cat"]')).toHaveText('Cat');
+    await expect(petTypeSelect.locator('option[value="other"]')).toHaveText('Other');
   });
 
   test('homepage shows features section', async ({ page }) => {
     await page.goto('/');
     
-    // Check for features section
-    const featuresSection = page.locator('.landing__features');
-    await expect(featuresSection).toBeVisible();
+    // Check for features heading
+    const featuresHeading = page.locator('h2:has-text("Why Choose PetBnB?")');
+    await expect(featuresHeading).toBeVisible();
     
-    // Check for feature cards
-    const featureCards = page.locator('.landing__feature-card');
-    await expect(featureCards).toHaveCount(3);
+    // Check for feature cards  
+    const featureCards = page.locator('.feature-card');
+    await expect(featureCards).toHaveCount(4);
   });
 });

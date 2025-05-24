@@ -8,6 +8,12 @@ import './SitterProfile.css';
 
 const fetcher = (url: string) => axios.get(url).then(res => res.data);
 
+// Separate fetcher for image that doesn't throw on error
+const imageFetcher = (url: string) => 
+  axios.get(url)
+    .then(res => res.data)
+    .catch(() => null); // Return null on error instead of throwing
+
 interface Sitter {
   id: string;
   first_name: string;
@@ -47,9 +53,9 @@ const SitterProfile: React.FC = () => {
     fetcher
   );
 
-  const { data: imageData } = useSWR<{ imageUrl: string }>(
+  const { data: imageData } = useSWR<{ imageUrl: string } | null>(
     id ? `/api/sitters/${id}/image` : null,
-    fetcher
+    imageFetcher
   );
 
   // Initialize map when sitter data is loaded
