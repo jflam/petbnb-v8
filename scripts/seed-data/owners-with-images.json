@@ -1,0 +1,223 @@
+[
+  {
+    "id": "alex-chen-seattle",
+    "name": "Alex Chen",
+    "email": "alex.chen@email.com",
+    "city": "Seattle",
+    "state": "WA",
+    "lat": 47.6205,
+    "lng": -122.3493,
+    "pets": [
+      {
+        "name": "Mochi",
+        "type": "dog",
+        "breed": "Shiba Inu",
+        "age": 3,
+        "specialNeeds": "Needs daily walks, can be stubborn"
+      }
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a young Asian man with round glasses and a warm smile, walking with an adorable cream-colored Shiba Inu through a misty Seattle street lined with coffee shops and cherry blossoms",
+    "profilePicture": "/images/profiles/owner-alex-chen-seattle.jpg"
+  },
+  {
+    "id": "jennifer-adams-seattle",
+    "name": "Jennifer Adams",
+    "email": "jennifer.adams@email.com",
+    "city": "Seattle",
+    "state": "WA",
+    "lat": 47.6553,
+    "lng": -122.3035,
+    "pets": [
+      {
+        "name": "Luna",
+        "type": "cat",
+        "breed": "Maine Coon",
+        "age": 5,
+        "specialNeeds": "Requires daily grooming, indoor only"
+      },
+      {
+        "name": "Stella",
+        "type": "cat",
+        "breed": "Russian Blue",
+        "age": 4,
+        "specialNeeds": "Shy with strangers, bonded with Luna"
+      }
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a woman with flowing auburn hair reading a book by a rain-speckled window, with a majestic Maine Coon and elegant Russian Blue cat curled up on her lap, Seattle Space Needle visible in the distance",
+    "profilePicture": "/images/profiles/owner-jennifer-adams-seattle.jpg"
+  },
+  {
+    "id": "marcus-johnson-seattle",
+    "name": "Marcus Johnson",
+    "email": "marcus.johnson@email.com",
+    "city": "Seattle",
+    "state": "WA",
+    "lat": 47.6089,
+    "lng": -122.3359,
+    "pets": [
+      {
+        "name": "Duke",
+        "type": "dog",
+        "breed": "Golden Retriever",
+        "age": 7,
+        "specialNeeds": "Senior dog, needs joint supplements, loves swimming"
+      }
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a middle-aged Black man with kind eyes throwing a tennis ball at a lakeside park, his elderly golden retriever joyfully splashing in the water, Mount Rainier glowing in the background",
+    "profilePicture": "/images/profiles/owner-marcus-johnson-seattle.jpg"
+  },
+  {
+    "id": "sarah-williams-seattle",
+    "name": "Sarah Williams",
+    "email": "sarah.williams@email.com",
+    "city": "Seattle",
+    "state": "WA",
+    "lat": 47.6395,
+    "lng": -122.2993,
+    "pets": [
+      {
+        "name": "Pepper",
+        "type": "rabbit",
+        "breed": "Holland Lop",
+        "age": 2,
+        "specialNeeds": "Free roam rabbit, needs bunny-proofed space"
+      }
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a young woman with braided blonde hair sitting in a sunlit conservatory, gently petting a fluffy Holland Lop rabbit surrounded by potted herbs and vegetables, dewdrops sparkling on leaves",
+    "profilePicture": "/images/profiles/owner-sarah-williams-seattle.jpg"
+  },
+  {
+    "id": "david-park-seattle",
+    "name": "David Park",
+    "email": "david.park@email.com",
+    "city": "Seattle",
+    "state": "WA",
+    "lat": 47.6762,
+    "lng": -122.3157,
+    "pets": [
+      {
+        "name": "Zeus",
+        "type": "dog",
+        "breed": "German Shepherd",
+        "age": 4,
+        "specialNeeds": "High energy, needs mental stimulation, trained in commands"
+      },
+      {
+        "name": "Apollo",
+        "type": "dog",
+        "breed": "German Shepherd",
+        "age": 2,
+        "specialNeeds": "Learning from Zeus, very playful"
+      }
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a fit Korean man in hiking gear standing proudly with two majestic German Shepherds on a mountain trail, evergreen forests stretching below, eagles soaring overhead in a painted sky",
+    "profilePicture": "/images/profiles/owner-david-park-seattle.jpg"
+  },
+  {
+    "id": "maria-gonzalez-austin",
+    "name": "Maria Gonzalez",
+    "email": "maria.gonzalez@email.com",
+    "city": "Austin",
+    "state": "TX",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "pets": [
+      {
+        "name": "Frida",
+        "type": "dog",
+        "breed": "Chihuahua Mix",
+        "age": 6,
+        "specialNeeds": "Nervous around large dogs, prefers quiet environments"
+      }
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a vibrant Mexican woman with colorful embroidered dress, cradling a tiny Chihuahua mix wearing a flower collar, sitting in a Austin garden filled with cacti and monarch butterflies",
+    "profilePicture": "/images/profiles/owner-maria-gonzalez-austin.jpg"
+  },
+  {
+    "id": "robert-thompson-austin",
+    "name": "Robert Thompson",
+    "email": "robert.thompson@email.com",
+    "city": "Austin",
+    "state": "TX",
+    "lat": 30.285,
+    "lng": -97.7335,
+    "pets": [
+      {
+        "name": "Brisket",
+        "type": "dog",
+        "breed": "Blue Heeler",
+        "age": 5,
+        "specialNeeds": "Working dog, needs lots of exercise and jobs to do"
+      }
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a weathered Texas rancher with cowboy hat and boots, his alert Blue Heeler herding imaginary cattle, Austin city skyline merging with hill country in a dreamy sunset",
+    "profilePicture": "/images/profiles/owner-robert-thompson-austin.jpg"
+  },
+  {
+    "id": "lisa-nguyen-austin",
+    "name": "Lisa Nguyen",
+    "email": "lisa.nguyen@email.com",
+    "city": "Austin",
+    "state": "TX",
+    "lat": 30.3162,
+    "lng": -97.7707,
+    "pets": [
+      {
+        "name": "Mango",
+        "type": "bird",
+        "breed": "Sun Conure",
+        "age": 8,
+        "specialNeeds": "Loud, needs out-of-cage time, specialized diet"
+      },
+      {
+        "name": "Papaya",
+        "type": "bird",
+        "breed": "Green Cheek Conure",
+        "age": 6,
+        "specialNeeds": "Bonded with Mango, loves to play"
+      }
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a Vietnamese woman with long black hair adorned with feathers, two colorful conures perched on her shoulders, surrounded by tropical plants and musical notes floating in the air",
+    "profilePicture": "/images/profiles/owner-lisa-nguyen-austin.jpg"
+  },
+  {
+    "id": "james-mitchell-austin",
+    "name": "James Mitchell",
+    "email": "james.mitchell@email.com",
+    "city": "Austin",
+    "state": "TX",
+    "lat": 30.25,
+    "lng": -97.75,
+    "pets": [
+      {
+        "name": "Whiskey",
+        "type": "cat",
+        "breed": "Orange Tabby",
+        "age": 10,
+        "specialNeeds": "Diabetic, needs insulin twice daily"
+      }
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a bearded musician with a guitar, his chubby orange tabby cat lounging on an amplifier, vinyl records floating like bubbles around a cozy Austin music studio",
+    "profilePicture": "/images/profiles/owner-james-mitchell-austin.jpg"
+  },
+  {
+    "id": "emma-davis-austin",
+    "name": "Emma Davis",
+    "email": "emma.davis@email.com",
+    "city": "Austin",
+    "state": "TX",
+    "lat": 30.2908,
+    "lng": -97.7485,
+    "pets": [
+      {
+        "name": "Bella",
+        "type": "dog",
+        "breed": "Rescue Mix",
+        "age": 3,
+        "specialNeeds": "Rescue with anxiety, needs patient handler, making progress"
+      }
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a gentle young woman with curly hair sitting cross-legged under a massive oak tree, her timid rescue dog slowly approaching with wildflowers blooming where her paws touch the ground, butterflies dancing around them",
+    "profilePicture": "/images/profiles/owner-emma-davis-austin.jpg"
+  }
+]

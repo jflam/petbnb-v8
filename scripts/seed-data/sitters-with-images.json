@@ -1,0 +1,522 @@
+[
+  {
+    "id": "sarah-johnson-seattle",
+    "name": "Sarah Johnson",
+    "email": "sarah.johnson@email.com",
+    "city": "Seattle",
+    "state": "WA",
+    "lat": 47.6097,
+    "lng": -122.3331,
+    "bio": "Certified dog trainer with 10 years of experience. I specialize in positive reinforcement techniques and love helping dogs reach their full potential. Your furry friend will get plenty of exercise and mental stimulation!",
+    "experience": "10 years",
+    "specializations": [
+      "Dog Training",
+      "Behavioral Issues",
+      "Puppy Care"
+    ],
+    "hourlyRate": 45,
+    "rating": 4.9,
+    "reviewCount": 127,
+    "homeFeatures": [
+      "Fenced Yard",
+      "Dog Park Access",
+      "Training Equipment"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a cheerful woman with short auburn hair and kind green eyes, wearing a cozy forest-green sweater, surrounded by playful dogs in a sunlit garden with cherry blossoms, soft watercolor aesthetic",
+    "profilePicture": "/images/profiles/sitter-sarah-johnson-seattle.jpg"
+  },
+  {
+    "id": "marcus-chen-seattle",
+    "name": "Marcus Chen",
+    "email": "marcus.chen@email.com",
+    "city": "Seattle",
+    "state": "WA",
+    "lat": 47.6588,
+    "lng": -122.3093,
+    "bio": "Veterinary technician offering specialized care for pets with medical needs. I work from home and can provide medication administration, wound care, and monitor special dietary requirements.",
+    "experience": "8 years",
+    "specializations": [
+      "Medical Care",
+      "Senior Pets",
+      "Special Needs"
+    ],
+    "hourlyRate": 40,
+    "rating": 5,
+    "reviewCount": 89,
+    "homeFeatures": [
+      "Quiet Environment",
+      "Medical Equipment",
+      "No Other Pets"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a gentle Asian man with glasses and neat black hair, wearing a light blue medical scrub, tending to a senior golden retriever in a peaceful room filled with soft morning light and potted plants",
+    "profilePicture": "/images/profiles/sitter-marcus-chen-seattle.jpg"
+  },
+  {
+    "id": "emma-rodriguez-seattle",
+    "name": "Emma Rodriguez",
+    "email": "emma.rodriguez@email.com",
+    "city": "Seattle",
+    "state": "WA",
+    "lat": 47.6254,
+    "lng": -122.3219,
+    "bio": "Adventure enthusiast who loves taking dogs on hiking trails around Seattle. Your pup will explore the great outdoors and come home happily tired!",
+    "experience": "5 years",
+    "specializations": [
+      "Adventure Dogs",
+      "High Energy Pets",
+      "Trail Hiking"
+    ],
+    "hourlyRate": 35,
+    "rating": 4.8,
+    "reviewCount": 156,
+    "homeFeatures": [
+      "Near Trails",
+      "Large Vehicle",
+      "Outdoor Gear"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of an athletic woman with long dark braided hair, wearing hiking boots and outdoor gear, standing on a misty mountain trail with several excited dogs, surrounded by towering evergreen trees",
+    "profilePicture": "/images/profiles/sitter-emma-rodriguez-seattle.jpg"
+  },
+  {
+    "id": "david-thompson-seattle",
+    "name": "David Thompson",
+    "email": "david.thompson@email.com",
+    "city": "Seattle",
+    "state": "WA",
+    "lat": 47.6762,
+    "lng": -122.3157,
+    "bio": "Retired teacher with a passion for cats. I provide a calm, loving environment for felines who prefer a quieter setting. Expert at handling shy or anxious cats.",
+    "experience": "12 years",
+    "specializations": [
+      "Cat Care",
+      "Shy Pets",
+      "Senior Cats"
+    ],
+    "hourlyRate": 30,
+    "rating": 4.9,
+    "reviewCount": 203,
+    "homeFeatures": [
+      "Cat Trees",
+      "Quiet Home",
+      "No Dogs"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a kind elderly man with silver hair and warm brown eyes, sitting in a cozy library with multiple cats lounging on bookshelves and his lap, soft afternoon light filtering through lace curtains",
+    "profilePicture": "/images/profiles/sitter-david-thompson-seattle.jpg"
+  },
+  {
+    "id": "jessica-patel-seattle",
+    "name": "Jessica Patel",
+    "email": "jessica.patel@email.com",
+    "city": "Seattle",
+    "state": "WA",
+    "lat": 47.6089,
+    "lng": -122.3359,
+    "bio": "Professional pet photographer who combines pet sitting with capturing beautiful memories. Your pet will be pampered and you'll receive adorable photos!",
+    "experience": "6 years",
+    "specializations": [
+      "Pet Photography",
+      "Small Dogs",
+      "Grooming"
+    ],
+    "hourlyRate": 38,
+    "rating": 4.7,
+    "reviewCount": 94,
+    "homeFeatures": [
+      "Photography Studio",
+      "Grooming Station",
+      "Props"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a creative woman with colorful highlights in her black hair, holding a vintage camera while surrounded by small dogs wearing cute accessories in a whimsical studio with fairy lights",
+    "profilePicture": "/images/profiles/sitter-jessica-patel-seattle.jpg"
+  },
+  {
+    "id": "robert-kim-seattle",
+    "name": "Robert Kim",
+    "email": "robert.kim@email.com",
+    "city": "Seattle",
+    "state": "WA",
+    "lat": 47.6493,
+    "lng": -122.3505,
+    "bio": "Former military K9 handler specializing in large breed dogs and working breeds. I provide structured exercise and mental stimulation for high-drive dogs.",
+    "experience": "15 years",
+    "specializations": [
+      "Large Breeds",
+      "Working Dogs",
+      "Obedience Training"
+    ],
+    "hourlyRate": 42,
+    "rating": 5,
+    "reviewCount": 178,
+    "homeFeatures": [
+      "Large Fenced Yard",
+      "Agility Equipment",
+      "Security"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a strong man with a military bearing and kind smile, training German Shepherds in a spacious yard with obstacle courses under a dramatic sunset sky",
+    "profilePicture": "/images/profiles/sitter-robert-kim-seattle.jpg"
+  },
+  {
+    "id": "olivia-jackson-seattle",
+    "name": "Olivia Jackson",
+    "email": "olivia.jackson@email.com",
+    "city": "Seattle",
+    "state": "WA",
+    "lat": 47.6145,
+    "lng": -122.3178,
+    "bio": "Zoology student with expertise in exotic pets. I care for rabbits, guinea pigs, birds, and reptiles with knowledge of their specific needs.",
+    "experience": "4 years",
+    "specializations": [
+      "Exotic Pets",
+      "Small Animals",
+      "Birds"
+    ],
+    "hourlyRate": 32,
+    "rating": 4.8,
+    "reviewCount": 67,
+    "homeFeatures": [
+      "Climate Control",
+      "Specialized Enclosures",
+      "Quiet"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a young woman with curly red hair and freckles, surrounded by colorful parrots, fluffy rabbits, and a bearded dragon in a greenhouse-like room filled with plants",
+    "profilePicture": "/images/profiles/sitter-olivia-jackson-seattle.jpg"
+  },
+  {
+    "id": "michael-nguyen-seattle",
+    "name": "Michael Nguyen",
+    "email": "michael.nguyen@email.com",
+    "city": "Seattle",
+    "state": "WA",
+    "lat": 47.668,
+    "lng": -122.384,
+    "bio": "Work-from-home software engineer who loves having furry companions during the day. Your pet will never be alone and gets constant attention between my coding sessions.",
+    "experience": "3 years",
+    "specializations": [
+      "Daytime Care",
+      "Separation Anxiety",
+      "Puppies"
+    ],
+    "hourlyRate": 28,
+    "rating": 4.6,
+    "reviewCount": 112,
+    "homeFeatures": [
+      "Home Office",
+      "Puppy-Proofed",
+      "Tech Monitoring"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a young Asian man with stylish glasses working on a laptop while a playful puppy sleeps on his desk, surrounded by monitors and houseplants in a modern home office",
+    "profilePicture": "/images/profiles/sitter-michael-nguyen-seattle.jpg"
+  },
+  {
+    "id": "sophia-anderson-seattle",
+    "name": "Sophia Anderson",
+    "email": "sophia.anderson@email.com",
+    "city": "Seattle",
+    "state": "WA",
+    "lat": 47.6369,
+    "lng": -122.3267,
+    "bio": "Certified pet nutritionist and chef who prepares homemade meals for pets with dietary restrictions. I ensure your pet's health through proper nutrition.",
+    "experience": "7 years",
+    "specializations": [
+      "Pet Nutrition",
+      "Special Diets",
+      "Food Allergies"
+    ],
+    "hourlyRate": 36,
+    "rating": 4.9,
+    "reviewCount": 143,
+    "homeFeatures": [
+      "Commercial Kitchen",
+      "Food Storage",
+      "Meal Prep Area"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a blonde woman wearing a chef's apron, preparing colorful healthy pet meals in a bright kitchen while dogs and cats wait eagerly, steam rising from pots in magical swirls",
+    "profilePicture": "/images/placeholder-sitter.jpg"
+  },
+  {
+    "id": "james-williams-seattle",
+    "name": "James Williams",
+    "email": "james.williams@email.com",
+    "city": "Seattle",
+    "state": "WA",
+    "lat": 47.6219,
+    "lng": -122.3238,
+    "bio": "Former zoo keeper with experience handling all types of animals. I provide enrichment activities and species-appropriate care for any pet.",
+    "experience": "20 years",
+    "specializations": [
+      "All Animals",
+      "Enrichment",
+      "Behavioral Expert"
+    ],
+    "hourlyRate": 45,
+    "rating": 5,
+    "reviewCount": 234,
+    "homeFeatures": [
+      "Multiple Enclosures",
+      "Enrichment Toys",
+      "Library"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a wise-looking man with a gray beard surrounded by various animals - dogs, cats, birds, and a tortoise - in a magical garden setting with floating bubbles and butterflies",
+    "profilePicture": "/images/profiles/sitter-james-williams-seattle.jpg"
+  },
+  {
+    "id": "luna-garcia-austin",
+    "name": "Luna Garcia",
+    "email": "luna.garcia@email.com",
+    "city": "Austin",
+    "state": "TX",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "bio": "Yoga instructor who incorporates pets into wellness routines. I offer doga (dog yoga) sessions and ensure your pet stays zen and exercised!",
+    "experience": "5 years",
+    "specializations": [
+      "Doga",
+      "Stress Relief",
+      "Senior Dogs"
+    ],
+    "hourlyRate": 34,
+    "rating": 4.7,
+    "reviewCount": 98,
+    "homeFeatures": [
+      "Yoga Studio",
+      "Meditation Garden",
+      "Calm Space"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a serene woman with long flowing black hair in yoga attire, practicing poses with dogs on yoga mats in a sun-drenched studio with plants and crystals",
+    "profilePicture": "/images/profiles/sitter-luna-garcia-austin.jpg"
+  },
+  {
+    "id": "tyler-brown-austin",
+    "name": "Tyler Brown",
+    "email": "tyler.brown@email.com",
+    "city": "Austin",
+    "state": "TX",
+    "lat": 30.285,
+    "lng": -97.7335,
+    "bio": "Music producer with a sound-proofed studio perfect for noise-sensitive pets. I specialize in caring for pets who need a quiet, calm environment.",
+    "experience": "6 years",
+    "specializations": [
+      "Anxious Pets",
+      "Noise Sensitivity",
+      "Cats"
+    ],
+    "hourlyRate": 32,
+    "rating": 4.8,
+    "reviewCount": 121,
+    "homeFeatures": [
+      "Sound-Proofed",
+      "Music Studio",
+      "Calm Atmosphere"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a laid-back man with dreadlocks and headphones, sitting at a mixing board while cats lounge on synthesizers and a dog sleeps peacefully, soft neon lights creating ambient glow",
+    "profilePicture": "/images/profiles/sitter-tyler-brown-austin.jpg"
+  },
+  {
+    "id": "amanda-lee-austin",
+    "name": "Amanda Lee",
+    "email": "amanda.lee@email.com",
+    "city": "Austin",
+    "state": "TX",
+    "lat": 30.3162,
+    "lng": -97.7707,
+    "bio": "Former veterinary assistant turned full-time pet sitter. I provide medical care, administer medications, and monitor health conditions with expertise.",
+    "experience": "9 years",
+    "specializations": [
+      "Medical Care",
+      "Post-Surgery",
+      "Medications"
+    ],
+    "hourlyRate": 38,
+    "rating": 4.9,
+    "reviewCount": 167,
+    "homeFeatures": [
+      "Medical Supplies",
+      "Quiet Recovery Area",
+      "24/7 Care"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a caring woman with short brown hair wearing scrubs, gently tending to a bandaged dog while other pets rest comfortably in a cozy medical recovery room with soft lighting",
+    "profilePicture": "/images/profiles/sitter-amanda-lee-austin.jpg"
+  },
+  {
+    "id": "christopher-davis-austin",
+    "name": "Christopher Davis",
+    "email": "christopher.davis@email.com",
+    "city": "Austin",
+    "state": "TX",
+    "lat": 30.25,
+    "lng": -97.75,
+    "bio": "Professional dog walker and pack leader. I take groups on adventures around Austin's trails and ensure safe, fun socialization for all dogs.",
+    "experience": "11 years",
+    "specializations": [
+      "Pack Walks",
+      "Socialization",
+      "Trail Adventures"
+    ],
+    "hourlyRate": 30,
+    "rating": 4.8,
+    "reviewCount": 289,
+    "homeFeatures": [
+      "Van Transport",
+      "Trail Access",
+      "Pack Equipment"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of an energetic man with sun-bleached hair leading a diverse pack of happy dogs through a Texas hill country trail, wildflowers blooming and birds flying overhead",
+    "profilePicture": "/images/profiles/sitter-christopher-davis-austin.jpg"
+  },
+  {
+    "id": "natalie-martinez-austin",
+    "name": "Natalie Martinez",
+    "email": "natalie.martinez@email.com",
+    "city": "Austin",
+    "state": "TX",
+    "lat": 30.2908,
+    "lng": -97.7485,
+    "bio": "Animal behaviorist specializing in rescue pets and trauma recovery. I help pets overcome past experiences with patience and expertise.",
+    "experience": "13 years",
+    "specializations": [
+      "Rescue Pets",
+      "Trauma Recovery",
+      "Behavior Modification"
+    ],
+    "hourlyRate": 42,
+    "rating": 5,
+    "reviewCount": 156,
+    "homeFeatures": [
+      "Safe Spaces",
+      "Behavioral Tools",
+      "Secure Fencing"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a compassionate woman with warm eyes and gentle smile, sitting cross-legged surrounded by rescue dogs showing trust, in a peaceful room with soft cushions and healing crystals",
+    "profilePicture": "/images/profiles/sitter-natalie-martinez-austin.jpg"
+  },
+  {
+    "id": "brandon-taylor-austin",
+    "name": "Brandon Taylor",
+    "email": "brandon.taylor@email.com",
+    "city": "Austin",
+    "state": "TX",
+    "lat": 30.2747,
+    "lng": -97.7403,
+    "bio": "Former ranch hand with expertise in farm animals. I care for chickens, goats, pigs, and other livestock in addition to traditional pets.",
+    "experience": "8 years",
+    "specializations": [
+      "Farm Animals",
+      "Livestock",
+      "Large Properties"
+    ],
+    "hourlyRate": 35,
+    "rating": 4.7,
+    "reviewCount": 93,
+    "homeFeatures": [
+      "Acreage",
+      "Barn",
+      "Pastures"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a rugged cowboy with a friendly mustache, feeding chickens while goats and a pig play nearby, golden Texas sunset casting long shadows across a rustic barn",
+    "profilePicture": "/images/profiles/sitter-brandon-taylor-austin.jpg"
+  },
+  {
+    "id": "rachel-white-austin",
+    "name": "Rachel White",
+    "email": "rachel.white@email.com",
+    "city": "Austin",
+    "state": "TX",
+    "lat": 30.308,
+    "lng": -97.745,
+    "bio": "Swim instructor with a pool perfect for water therapy and exercise. I specialize in helping dogs with joint issues through aquatic therapy.",
+    "experience": "7 years",
+    "specializations": [
+      "Aquatic Therapy",
+      "Joint Issues",
+      "Water Dogs"
+    ],
+    "hourlyRate": 40,
+    "rating": 4.9,
+    "reviewCount": 114,
+    "homeFeatures": [
+      "Pool",
+      "Ramps",
+      "Life Jackets"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of an athletic woman in a swimsuit helping a golden retriever swim in a sparkling pool, water droplets catching rainbow light, tropical plants surrounding the area",
+    "profilePicture": "/images/placeholder-sitter.jpg"
+  },
+  {
+    "id": "daniel-wilson-austin",
+    "name": "Daniel Wilson",
+    "email": "daniel.wilson@email.com",
+    "city": "Austin",
+    "state": "TX",
+    "lat": 30.26,
+    "lng": -97.77,
+    "bio": "Food truck owner who brings pets to work! Your dog will socialize with customers and other dogs while enjoying the Austin food scene.",
+    "experience": "4 years",
+    "specializations": [
+      "Social Dogs",
+      "Food Truck Life",
+      "Urban Adventures"
+    ],
+    "hourlyRate": 25,
+    "rating": 4.6,
+    "reviewCount": 187,
+    "homeFeatures": [
+      "Food Truck",
+      "Outdoor Seating",
+      "Dog-Friendly"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a jovial bearded man in a food truck apron, serving tacos while dogs of all sizes wait patiently, Austin skyline in background with string lights overhead",
+    "profilePicture": "/images/profiles/sitter-daniel-wilson-austin.jpg"
+  },
+  {
+    "id": "michelle-harris-austin",
+    "name": "Michelle Harris",
+    "email": "michelle.harris@email.com",
+    "city": "Austin",
+    "state": "TX",
+    "lat": 30.295,
+    "lng": -97.715,
+    "bio": "Artist who creates custom pet portraits while pet sitting. Your furry friend will be my muse and you'll receive a beautiful artwork!",
+    "experience": "6 years",
+    "specializations": [
+      "Pet Portraits",
+      "Calm Pets",
+      "Indoor Care"
+    ],
+    "hourlyRate": 33,
+    "rating": 4.8,
+    "reviewCount": 108,
+    "homeFeatures": [
+      "Art Studio",
+      "Natural Light",
+      "Creative Space"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a woman with paint-splattered overalls and messy bun, painting a majestic cat portrait while the real cat poses regally, art supplies floating magically around the sunny studio",
+    "profilePicture": "/images/profiles/sitter-michelle-harris-austin.jpg"
+  },
+  {
+    "id": "kevin-robinson-austin",
+    "name": "Kevin Robinson",
+    "email": "kevin.robinson@email.com",
+    "city": "Austin",
+    "state": "TX",
+    "lat": 30.255,
+    "lng": -97.755,
+    "bio": "Tech entrepreneur with a smart home designed for pet care. Automated feeders, cameras, and climate control ensure your pet's comfort 24/7.",
+    "experience": "5 years",
+    "specializations": [
+      "Tech-Enabled Care",
+      "Remote Monitoring",
+      "Automated Systems"
+    ],
+    "hourlyRate": 37,
+    "rating": 4.7,
+    "reviewCount": 142,
+    "homeFeatures": [
+      "Smart Home",
+      "Pet Cameras",
+      "Automated Care"
+    ],
+    "imagePrompt": "Studio Ghibli style portrait of a tech-savvy man with trendy glasses checking pet monitors on multiple screens while dogs and cats relax in a futuristic home with glowing ambient lighting",
+    "profilePicture": "/images/profiles/sitter-kevin-robinson-austin.jpg"
+  }
+]

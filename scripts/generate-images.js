@@ -8,31 +8,57 @@ const ownerData = require('./seed-data/owners.json');
 
 async function generateImage(prompt, filename) {
   try {
+    console.log(`Generating image: ${filename}`);
+    
+    const requestBody = {
+      model: "gpt-image-1",
+      prompt: `Studio Ghibli style illustration: ${prompt}. Soft watercolor aesthetic, gentle lighting, whimsical and heartwarming atmosphere, detailed background, character portrait.`,
+      size: "1024x1024",
+      quality: "high",
+      n: 1
+    };
+    
     const response = await fetch('https://api.openai.com/v1/images/generations', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
       },
-      body: JSON.stringify({
-        model: "gpt-image-1",
-        prompt: `Studio Ghibli style illustration: ${prompt}. Soft watercolor aesthetic, gentle lighting, whimsical and heartwarming atmosphere, detailed background, character portrait.`,
-        size: "1024x1024",
-        quality: "standard",
-        n: 1
-      })
+      body: JSON.stringify(requestBody)
     });
 
     if (!response.ok) {
+      const errorBody = await response.text();
+      console.error('API Error Response:', {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorBody
+      });
       throw new Error(`API request failed: ${response.statusText}`);
     }
 
     const data = await response.json();
-    const imageUrl = data.data[0].url;
+    console.log('Response data structure:', Object.keys(data.data[0]));
     
-    // Download and save the image
-    const imageResponse = await fetch(imageUrl);
-    const buffer = await imageResponse.buffer();
+    let buffer;
+    
+    // Check if response contains base64 data or URL
+    if (data.data[0].b64_json) {
+      // Handle base64 response
+      const imageBase64 = data.data[0].b64_json;
+      buffer = Buffer.from(imageBase64, 'base64');
+    } else if (data.data[0].url) {
+      // Handle URL response - need to download the image
+      const imageUrl = data.data[0].url;
+      console.log('Downloading from URL:', imageUrl);
+      const imageResponse = await fetch(imageUrl);
+      if (!imageResponse.ok) {
+        throw new Error(`Failed to download image: ${imageResponse.statusText}`);
+      }
+      buffer = await imageResponse.buffer();
+    } else {
+      throw new Error('Unexpected response format from API');
+    }
     
     const outputPath = path.join(__dirname, '../public/images/profiles', filename);
     await fs.mkdir(path.dirname(outputPath), { recursive: true });
