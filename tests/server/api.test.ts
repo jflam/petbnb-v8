@@ -18,7 +18,7 @@ if (process.env.RUNNING_IN_DOCKER !== 'true') {
     process.env.DATABASE_URL = process.env.DATABASE_URL.replace('@postgres:', '@localhost:');
   } else {
     // Fallback to a standard local connection
-    process.env.DATABASE_URL = 'postgres://postgres:postgres@localhost:5432/test_db';
+    process.env.DATABASE_URL = 'postgres://postgres:postgres@localhost:5432/petbnb_test';
   }
 }
 
@@ -72,17 +72,18 @@ describe('API Tests', () => {
       // We should have 20 restaurants from the seed data if using real database
       expect(response.body.length).toBe(20);
       
-      // Check the first restaurant
+      // Check the first restaurant (which is now a sitter)
       const restaurant = response.body[0];
       expect(restaurant).toHaveProperty('id');
-      expect(restaurant).toHaveProperty('name', 'Biang Biang Noodles');
-      expect(restaurant).toHaveProperty('city', 'Seattle');
-      expect(restaurant).toHaveProperty('cuisine_type', 'Chinese');
-      expect(restaurant).toHaveProperty('specialty', 'Hand-pulled noodles');
+      expect(restaurant).toHaveProperty('name');
+      expect(restaurant).toHaveProperty('city');
+      expect(restaurant).toHaveProperty('cuisine_type', 'Pet Care');
+      expect(restaurant).toHaveProperty('specialty');
       expect(restaurant).toHaveProperty('location');
       expect(restaurant.location).toHaveProperty('type', 'Point');
       expect(restaurant.location).toHaveProperty('coordinates');
-      expect(restaurant.location.coordinates).toEqual([-122.32414, 47.613896]);
+      expect(Array.isArray(restaurant.location.coordinates)).toBe(true);
+      expect(restaurant.location.coordinates.length).toBe(2);
     }
   });
   

@@ -6,7 +6,7 @@
 echo "Setting up test database..."
 
 # Set database connection for local testing
-export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/test_db"
+export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/petbnb_test"
 echo "Using database URL: $DATABASE_URL"
 
 # Run migrations

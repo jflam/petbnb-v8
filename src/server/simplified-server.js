@@ -53,21 +53,33 @@ app.get('/api/config/mapbox', (_req, res) => {
 // Get all restaurants
 app.get('/api/restaurants', async (_req, res) => {
   try {
+    // This endpoint is legacy - return sitter data formatted as restaurants for backwards compatibility
     const { rows } = await pool.query(`
       SELECT 
         id, 
-        rank,
-        name, 
+        ROW_NUMBER() OVER (ORDER BY created_at) as rank,
+        CONCAT(first_name, ' ', last_name) as name, 
         city, 
         address, 
-        cuisine_type, 
-        specialty, 
-        yelp_rating, 
-        price_range, 
-        image_url,
+        'Pet Care' as cuisine_type, 
+        CASE 
+          WHEN accepts_dogs AND accepts_cats THEN 'Dogs & Cats'
+          WHEN accepts_dogs THEN 'Dogs Only'
+          WHEN accepts_cats THEN 'Cats Only'
+          ELSE 'Other Pets'
+        END as specialty, 
+        mock_rating as yelp_rating, 
+        CASE 
+          WHEN hourly_rate < 30 THEN '$'
+          WHEN hourly_rate < 50 THEN '$$'
+          ELSE '$$$'
+        END as price_range, 
+        profile_picture as image_url,
         ST_AsGeoJSON(location) as location_geojson
-      FROM restaurants
-      ORDER BY rank
+      FROM sitter_profiles
+      WHERE is_active = true
+      ORDER BY created_at
+      LIMIT 20
     `);
 
     // Transform the results to include GeoJSON
@@ -106,19 +118,29 @@ app.get('/api/restaurants/nearby', async (req, res) => {
     const { rows } = await pool.query(`
       SELECT 
         id,
-        rank,
-        name,
+        ROW_NUMBER() OVER (ORDER BY created_at) as rank,
+        CONCAT(first_name, ' ', last_name) as name,
         city,
         address,
-        cuisine_type,
-        specialty,
-        yelp_rating,
-        price_range,
-        image_url,
+        'Pet Care' as cuisine_type,
+        CASE 
+          WHEN accepts_dogs AND accepts_cats THEN 'Dogs & Cats'
+          WHEN accepts_dogs THEN 'Dogs Only'
+          WHEN accepts_cats THEN 'Cats Only'
+          ELSE 'Other Pets'
+        END as specialty,
+        mock_rating as yelp_rating,
+        CASE 
+          WHEN hourly_rate < 30 THEN '$'
+          WHEN hourly_rate < 50 THEN '$$'
+          ELSE '$$$'
+        END as price_range,
+        profile_picture as image_url,
         ST_AsGeoJSON(location) as location_geojson,
         ST_Distance(location::geography, ST_MakePoint($1,$2)::geography) / 1000 AS distance_km
-      FROM restaurants
-      WHERE ST_DWithin(location::geography, ST_MakePoint($1,$2)::geography, $3 * 1000)
+      FROM sitter_profiles
+      WHERE is_active = true 
+        AND ST_DWithin(location::geography, ST_MakePoint($1,$2)::geography, $3 * 1000)
       ORDER BY distance_km
     `, [lon, lat, km]);
     
@@ -384,23 +406,32 @@ app.get('/api/sitters/:id', async (req, res) => {
     const { rows } = await pool.query(`
       SELECT 
         s.id,
-        s.name,
+        s.first_name,
+        s.last_name,
+        s.email,
+        s.phone,
         s.bio,
-        s.services,
-        s.rates,
-        s.availability,
-        s.profile_image_url,
-        s.verified,
-        s.years_experience,
-        s.certifications,
-        ST_AsGeoJSON(s.location) as location_geojson,
-        COALESCE(AVG(r.rating), 0) as average_rating,
-        COUNT(r.id) as review_count
-      FROM sitters s
-      LEFT JOIN reviews r ON s.id = r.sitter_id
+        s.experience,
+        s.hourly_rate,
+        s.service_radius,
+        s.profile_picture,
+        s.address,
+        s.city,
+        s.state,
+        s.zip_code,
+        s.accepts_dogs,
+        s.accepts_cats,
+        s.accepts_other_pets,
+        s.has_fenced_yard,
+        s.has_other_pets,
+        s.is_smoke_free,
+        s.mock_rating as average_rating,
+        s.mock_review_count as review_count,
+        s.mock_response_time,
+        s.mock_repeat_client_percent,
+        ST_AsGeoJSON(s.location) as location_geojson
+      FROM sitter_profiles s
       WHERE s.id = $1
-      GROUP BY s.id, s.name, s.bio, s.services, s.rates, s.availability, 
-               s.profile_image_url, s.verified, s.years_experience, s.certifications, s.location
     `, [id]);
     
     if (rows.length === 0) {
@@ -408,27 +439,17 @@ app.get('/api/sitters/:id', async (req, res) => {
     }
     
     const sitter = rows[0];
-    sitter.location = JSON.parse(sitter.location_geojson);
-    delete sitter.location_geojson;
-    sitter.average_rating = parseFloat(sitter.average_rating).toFixed(1);
-    sitter.review_count = parseInt(sitter.review_count);
+    if (sitter.location_geojson) {
+      sitter.location = JSON.parse(sitter.location_geojson);
+      delete sitter.location_geojson;
+    }
     
-    // Get reviews for this sitter
-    const reviewsResult = await pool.query(`
-      SELECT 
-        r.id,
-        r.rating,
-        r.comment,
-        r.created_at,
-        o.name as owner_name,
-        o.profile_image_url as owner_image
-      FROM reviews r
-      JOIN owners o ON r.owner_id = o.id
-      WHERE r.sitter_id = $1
-      ORDER BY r.created_at DESC
-    `, [id]);
+    // Format numeric fields
+    sitter.average_rating = parseFloat(sitter.average_rating || 0).toFixed(1);
+    sitter.review_count = parseInt(sitter.review_count || 0);
     
-    sitter.reviews = reviewsResult.rows;
+    // Since we don't have reviews in Phase 1, return empty array
+    sitter.reviews = [];
     
     res.json(sitter);
   } catch (error) {
@@ -441,43 +462,71 @@ app.get('/api/sitters/:id', async (req, res) => {
 app.post('/api/sitters', async (req, res) => {
   try {
     const { 
-      name, 
-      bio, 
-      services, 
-      rates, 
-      availability, 
-      profile_image_url,
-      location,
-      years_experience,
-      certifications 
+      firstName,
+      lastName,
+      email,
+      phone,
+      bio,
+      experience,
+      hourlyRate,
+      serviceRadius,
+      address,
+      city,
+      state,
+      zipCode,
+      latitude,
+      longitude,
+      acceptsDogs,
+      acceptsCats,
+      acceptsOtherPets,
+      hasFencedYard,
+      hasOtherPets,
+      isSmokeFree,
+      profilePicture
     } = req.body;
     
     // Validate required fields
-    if (!name || !bio || !services || !rates || !location) {
+    if (!firstName || !lastName || !email || !bio || !hourlyRate || !address || !city || !state || !zipCode || !latitude || !longitude) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
     
+    // Check if email already exists
+    const existingUser = await pool.query('SELECT id FROM sitter_profiles WHERE email = $1', [email]);
+    if (existingUser.rows.length > 0) {
+      return res.status(400).json({ error: 'Email already exists' });
+    }
+    
     const { rows } = await pool.query(`
-      INSERT INTO sitters (
-        name, bio, services, rates, availability, profile_image_url, 
-        location, years_experience, certifications, verified
+      INSERT INTO sitter_profiles (
+        first_name, last_name, email, phone, bio, experience, 
+        hourly_rate, service_radius, profile_picture,
+        address, city, state, zip_code, latitude, longitude, location,
+        accepts_dogs, accepts_cats, accepts_other_pets,
+        has_fenced_yard, has_other_pets, is_smoke_free
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, 
-        ST_SetSRID(ST_MakePoint($7, $8), 4326), 
-        $9, $10, false
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14::DECIMAL, $15::DECIMAL,
+        ST_SetSRID(ST_MakePoint($15::DECIMAL, $14::DECIMAL), 4326),
+        $16, $17, $18, $19, $20, $21
       )
-      RETURNING id, name, bio, services, rates, availability, profile_image_url,
-                years_experience, certifications, verified,
+      RETURNING id, first_name, last_name, email, phone, bio, experience,
+                hourly_rate, service_radius, profile_picture,
+                address, city, state, zip_code, latitude, longitude,
+                accepts_dogs, accepts_cats, accepts_other_pets,
+                has_fenced_yard, has_other_pets, is_smoke_free,
                 ST_AsGeoJSON(location) as location_geojson
     `, [
-      name, bio, services, rates, availability || {}, profile_image_url,
-      location.coordinates[0], location.coordinates[1],
-      years_experience || 0, certifications || []
+      firstName, lastName, email, phone, bio, experience,
+      hourlyRate, serviceRadius || 10, profilePicture || '/images/placeholder-sitter.jpg',
+      address, city, state, zipCode, latitude, longitude,
+      acceptsDogs !== false, acceptsCats !== false, acceptsOtherPets || false,
+      hasFencedYard || false, hasOtherPets || false, isSmokeFree !== false
     ]);
     
     const sitter = rows[0];
-    sitter.location = JSON.parse(sitter.location_geojson);
-    delete sitter.location_geojson;
+    if (sitter.location_geojson) {
+      sitter.location = JSON.parse(sitter.location_geojson);
+      delete sitter.location_geojson;
+    }
     
     res.status(201).json(sitter);
   } catch (error) {
