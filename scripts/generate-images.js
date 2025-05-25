@@ -75,26 +75,88 @@ async function generateImage(prompt, filename) {
 async function generateAllImages() {
   console.log('Starting Studio Ghibli image generation...');
   
+  // Check for existing generated data files
+  const sittersWithImagesPath = path.join(__dirname, './seed-data/sitters-with-images.json');
+  const ownersWithImagesPath = path.join(__dirname, './seed-data/owners-with-images.json');
+  
+  // Load existing data if available
+  let existingSittersData = {};
+  let existingOwnersData = {};
+  
+  try {
+    if (await fs.access(sittersWithImagesPath).then(() => true).catch(() => false)) {
+      const data = JSON.parse(await fs.readFile(sittersWithImagesPath, 'utf8'));
+      existingSittersData = Object.fromEntries(data.map(s => [s.id || s.email, s]));
+      console.log(`Found existing sitters data with ${Object.keys(existingSittersData).length} entries`);
+    }
+  } catch (error) {
+    console.log('No existing sitters data found');
+  }
+  
+  try {
+    if (await fs.access(ownersWithImagesPath).then(() => true).catch(() => false)) {
+      const data = JSON.parse(await fs.readFile(ownersWithImagesPath, 'utf8'));
+      existingOwnersData = Object.fromEntries(data.map(o => [o.id || o.email, o]));
+      console.log(`Found existing owners data with ${Object.keys(existingOwnersData).length} entries`);
+    }
+  } catch (error) {
+    console.log('No existing owners data found');
+  }
+  
   // Generate sitter images
-  console.log(`\nGenerating images for ${sitterData.length} sitters...`);
+  console.log(`\nProcessing ${sitterData.length} sitters...`);
+  let sittersGenerated = 0;
+  let sittersSkipped = 0;
+  
   for (const sitter of sitterData) {
     const filename = `sitter-${sitter.id}.jpg`;
-    const imageUrl = await generateImage(sitter.imagePrompt, filename);
-    sitter.profilePicture = imageUrl || '/images/placeholder-sitter.jpg';
+    const imagePath = path.join(__dirname, '../public/images/profiles', filename);
     
-    // Add a small delay to avoid rate limits
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Check if image already exists on disk
+    const imageExists = await fs.access(imagePath).then(() => true).catch(() => false);
+    
+    if (imageExists && existingSittersData[sitter.id || sitter.email]?.profilePicture) {
+      // Image exists and we have the URL in our data
+      console.log(`✓ Skipping ${filename} (already exists)`);
+      sitter.profilePicture = existingSittersData[sitter.id || sitter.email].profilePicture;
+      sittersSkipped++;
+    } else {
+      // Generate new image
+      const imageUrl = await generateImage(sitter.imagePrompt, filename);
+      sitter.profilePicture = imageUrl || '/images/placeholder-sitter.jpg';
+      sittersGenerated++;
+      
+      // Add a small delay to avoid rate limits
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
   }
 
   // Generate owner images
-  console.log(`\nGenerating images for ${ownerData.length} owners...`);
+  console.log(`\nProcessing ${ownerData.length} owners...`);
+  let ownersGenerated = 0;
+  let ownersSkipped = 0;
+  
   for (const owner of ownerData) {
     const filename = `owner-${owner.id}.jpg`;
-    const imageUrl = await generateImage(owner.imagePrompt, filename);
-    owner.profilePicture = imageUrl || '/images/placeholder-owner.jpg';
+    const imagePath = path.join(__dirname, '../public/images/profiles', filename);
     
-    // Add a small delay to avoid rate limits
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Check if image already exists on disk
+    const imageExists = await fs.access(imagePath).then(() => true).catch(() => false);
+    
+    if (imageExists && existingOwnersData[owner.id || owner.email]?.profilePicture) {
+      // Image exists and we have the URL in our data
+      console.log(`✓ Skipping ${filename} (already exists)`);
+      owner.profilePicture = existingOwnersData[owner.id || owner.email].profilePicture;
+      ownersSkipped++;
+    } else {
+      // Generate new image
+      const imageUrl = await generateImage(owner.imagePrompt, filename);
+      owner.profilePicture = imageUrl || '/images/placeholder-owner.jpg';
+      ownersGenerated++;
+      
+      // Add a small delay to avoid rate limits
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
   }
 
   // Save updated data with image URLs
@@ -108,7 +170,10 @@ async function generateAllImages() {
     JSON.stringify(ownerData, null, 2)
   );
   
-  console.log('\nImage generation complete! Data saved to sitters-with-images.json and owners-with-images.json');
+  console.log('\nImage generation complete!');
+  console.log(`Sitters: ${sittersGenerated} generated, ${sittersSkipped} skipped`);
+  console.log(`Owners: ${ownersGenerated} generated, ${ownersSkipped} skipped`);
+  console.log('Data saved to sitters-with-images.json and owners-with-images.json');
 }
 
 // Check if OPENAI_API_KEY is set
